@@ -4,6 +4,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from users.models import User
+
 
 def get_token(user):
     refresh_token = RefreshToken.for_user(user) 
@@ -46,3 +48,13 @@ class SignUp(APIView):
 
         User.objects.create(username=data["username"], password=make_password(data["password"]))
         return Response({"signup_success": True}, status=200)
+
+
+class ListAllUsers(APIView):
+    permission_classes = [ IsAuthenticated ]
+
+    def get(self, request):
+        users = User.objects.all().exclude(id=request.data["current_user_id"]).order_by("-id")
+        users = [user.serialize() for user in users]
+
+        return Response({"users": users}, status=200)
