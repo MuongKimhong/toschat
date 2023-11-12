@@ -30,3 +30,19 @@ class SignIn(APIView):
             return Response({"error": True}, status=400)
 
         return Response(get_token(user), status=200)
+
+
+class SignUp(APIView):
+    permission_classes = [ AllowAny ]
+
+    def post(self, request):
+        data = request.data
+
+        if data["password"] != data["confirm_password"]:
+            return Response({"two_password_not_match": True}, status=400)
+        
+        if User.objects.filter(username=data["username"]).exists() is True:
+            return Response({"username_taken": True}, status=400)
+
+        User.objects.create(username=data["username"], password=make_password(data["password"]))
+        return Response({"signup_success": True}, status=200)
