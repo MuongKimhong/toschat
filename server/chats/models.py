@@ -13,3 +13,18 @@ class ChatRoom(models.Model):
             "member_ids": [member.id for member in self.members.all()],
             "members": [member.serialize() for member in self.members.all()]
         }
+
+
+class Message(models.Model):
+    chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE)
+    text = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "sender": self.sender.serialize(),
+            "chatroom_id": self.chatroom.id,
+            "text": self.text
+        }
