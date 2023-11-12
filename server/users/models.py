@@ -12,5 +12,4 @@ class User(AbstractUser):
         return {
             "id": self.id,
             "username": self.username,
-            "created_date": date_format(self.created_date),
         }
