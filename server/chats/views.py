@@ -27,3 +27,20 @@ class SendMessage(APIView):
             text=request.data["text"]
         )
         return Response({"message": message.serialize()}, status=200)
+
+
+class StartMessageUser(APIView):
+    permission_classes = [ IsAuthenticated ]
+
+    def post(self, request):
+        current_user = User.objects.get(id=int(extract_user_id(request)))
+        other_user = User.objects.get(id=int(request.data["other_user_id"]))
+
+        if ChatRoom.objects.filter(members__in=[current_user.id, other_user.id]).exists():
+            chatroom = ChatRoom.objects.get(members__in=[current_user.id, other_user.id])
+        else:
+            chatroom = ChatRoom.objects.create()
+            chatroom.add(current_user)
+            chatroom.add(other_user)
+
+        return Response({"chatroom_id": chatroom.id}, status=200)
