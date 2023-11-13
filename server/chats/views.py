@@ -44,3 +44,11 @@ class StartMessageUser(APIView):
             chatroom.add(other_user)
 
         return Response({"chatroom_id": chatroom.id}, status=200)
+
+
+class GetChatRoomDetail(APIView):
+    permission_classes = [ IsAuthenticated ]
+
+    def get(self, request):
+        chatroom = ChatRoom.objects.get(id=int(request.query_params["chatroom_id"]))
+        return Response({"chatroom": chatroom.serialize()}, status=200)
