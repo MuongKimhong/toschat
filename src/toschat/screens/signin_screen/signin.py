@@ -49,7 +49,7 @@ class SignInScreen(Screen):
         from ..home_screen.home import HomeScreen
         self.app.install_screen(HomeScreen, "home")
         self.app.switch_screen("home")
-        self.app.uninstall_screen("home")
+        self.app.uninstall_screen("signin")
 
     def redirect_signup(self):
         from ..signup_screen.signup import SignUpScreen
