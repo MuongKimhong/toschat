@@ -39,10 +39,8 @@ class SignUp(APIView):
 
     def post(self, request):
         data = request.data
-
-        if data["password"] != data["confirm_password"]:
-            return Response({"two_password_not_match": True}, status=400)
-        
+        print(data)
+ 
         if User.objects.filter(username=data["username"]).exists() is True:
             return Response({"username_taken": True}, status=400)
 

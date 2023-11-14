@@ -12,6 +12,13 @@ SignUpScreen {
     content-align: center middle;
 }
 
+#error-text{
+    content-align: center middle;
+    color: red;
+    visibility: hidden;
+    margin-top: 1;
+}
+
 #username-input {
     margin-left: 12;
     margin-right: 12;
