@@ -6,8 +6,7 @@ from screens.signup_screen.signup import SignUpScreen
 
 class TosChat(App):
     SCREENS = {
-        "signin": SignInScreen(),
-        "signup": SignUpScreen()
+        "signin": SignInScreen()
     } 
     
     def on_mount(self):

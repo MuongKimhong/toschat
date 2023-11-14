@@ -2,7 +2,12 @@ SignUpScreen {
     align: center middle;
 }
 
-.sign-in-text {
+.create-new-acc-text {
+    text-style: bold;
+    content-align: center middle;
+}
+
+#or-txt {
     text-style: bold;
     content-align: center middle;
 }
@@ -14,7 +19,7 @@ SignUpScreen {
     margin-bottom: 1;
 }
 
-#password-input {
+.password-input {
     margin-left: 12;
     margin-right: 12;
     margin-top: 2;
@@ -29,23 +34,15 @@ SignUpScreen {
     height: 5;
 }
 
-#signin-btn {
-    content-align: center middle;
-    width: 4;
-    height: 3;
-    border: none;   
-}
 #signup-btn {
     content-align: center middle;
     width: 4;
     height: 3;
     border: none;   
 }
-
-#create-new-acc-text {
+#signin-btn {
     content-align: center middle;
-    margin-top: 2;
-}
-#create-new-acc-text:hover {
-    color: green;
+    width: 42;
+    height: 3;
+    border: none;
 }
