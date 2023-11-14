@@ -5,13 +5,21 @@ from textual.screen import Screen
 from pathlib import Path
 import requests
 import time
+import json
 import os
 
 from ..variables import SERVER_BASE_URL
 
 
 def sign_in(username, password):
-    pass
+    data = {"username": username, "password": password}
+    response = requests.post(f"{SERVER_BASE_URL}api-users/sign-in/", data)
+    response = json.loads(response.text)
+
+    if response.get("error") is True:
+        return {"error": True}
+
+    return {"error": False, "credential": response.text} 
 
 
 class SignInScreen(Screen):
@@ -33,6 +41,10 @@ class SignInScreen(Screen):
             classes="container"
         )
 
+    def display_error(self):
+        self.query_one("#error-text").styles.visibility = "visible"
+        self.query_one("#username-input").styles.margin = (1, 12, 1, 12)
+
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "create-new-acc-btn":
             from ..signup_screen.signup import SignUpScreen
@@ -47,12 +59,20 @@ class SignInScreen(Screen):
             password = self.query_one("#password-input").value
 
             if (username.strip() == "") or (password.strip() == ""):
-                self.query_one("#error-text").styles.visibility = "visible"
-                self.query_one("#username-input").styles.margin = (1, 12, 1, 12)
+                self.display_error()
             else:
-                home_dir = Path.home()
+                response = sign_in(username, password)
 
-                # create an empty json file to store credential
-                if os.path.exists(f"{home_dir}/toschat_cred.json") is False:
-                    open(f"{home_dir}/toschat_cred.json", "a").close()                
+                if response["error"] is True:
+                    self.display_error()
+                else:
+                    credential = json.dumps(response["credential"], indent=4)
+ 
+                    home_dir = Path.home()
 
+                    # create an empty json file to store credential
+                    if os.path.exists(f"{home_dir}/toschat_cred.json") is False:
+                        open(f"{home_dir}/toschat_cred.json", "a").close()                
+
+                    with open(f"{home_dir}/toschat_cred.json", "w") as cred_file:
+                        cred_file.write(credential)
