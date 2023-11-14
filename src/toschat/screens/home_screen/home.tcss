@@ -1,0 +1,20 @@
+#top-container {
+    align: center middle;
+    layout: horizontal;
+    height: 2;
+    margin: 1;
+}
+
+Horizontal {
+    align: right middle;
+}
+
+#logout {
+    content-align: right middle;
+    padding-left: 2;
+    padding-right: 2;
+    height: 1;
+    margin-left: 1; 
+    margin-right: 1;
+    border: none;
+}
