@@ -1,11 +1,13 @@
 from textual.app import App, ComposeResult
 
 from screens.signin_screen.signin import SignInScreen
+from screens.signup_screen.signup import SignUpScreen
 
 
 class TosChat(App):
     SCREENS = {
-        "signin": SignInScreen()
+        "signin": SignInScreen(),
+        "signup": SignUpScreen()
     } 
     
     def on_mount(self):

@@ -14,6 +14,14 @@ class SignInScreen(Screen):
         yield Input(placeholder="Password", password=True, id="password-input")
         yield Container(
             Button("Sign In", id="signin-btn", variant="primary"),
-            id="container"
+            classes="container"
         )
-        yield Static("Create new account", id="create-new-acc-text")
+        yield Static("Or", id="or-txt")
+        yield Container(
+            Button("Create new account", id="create-new-acc-btn", variant="default"),
+            classes="container"
+        )
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "create-new-acc-btn":
+            self.app.switch_screen("signup")
