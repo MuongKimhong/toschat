@@ -16,4 +16,4 @@ class HomeScreen(Screen):
 
     def compose(self) -> ComposeResult:
         yield Static("Home screen")
-        
+        yield Static("Testing", id="test")
