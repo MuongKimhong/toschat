@@ -45,13 +45,19 @@ class SignInScreen(Screen):
         self.query_one("#error-text").styles.visibility = "visible"
         self.query_one("#username-input").styles.margin = (1, 12, 1, 12)
 
+    def redirect_home(self):
+        pass 
+
+    def redirect_signup(self):
+        from ..signup_screen.signup import SignUpScreen
+
+        self.app.install_screen(SignUpScreen, "signup")
+        self.app.switch_screen("signup")
+        self.app.uninstall_screen("signin")
+
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "create-new-acc-btn":
-            from ..signup_screen.signup import SignUpScreen
-
-            self.app.install_screen(SignUpScreen, "signup")
-            self.app.switch_screen("signup")
-            self.app.uninstall_screen("signin")
+            self.redirect_signup()
 
         elif event.button.id == "signin-btn":
             self.query_one("#error-text").styles.visibility = "hidden"
