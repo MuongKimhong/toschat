@@ -19,7 +19,14 @@ SignUpScreen {
     margin-bottom: 1;
 }
 
-.password-input {
+#password-input {
+    margin-left: 12;
+    margin-right: 12;
+    margin-top: 2;
+    margin-bottom: 1;
+}
+
+#confirm-password-input {
     margin-left: 12;
     margin-right: 12;
     margin-top: 2;
