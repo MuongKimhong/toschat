@@ -45,11 +45,12 @@ class SignUpScreen(Screen):
         self.query_one("#error-text").styles.visibility = "visible"
 
     def redirect_signin(self):
-        from ..signin_screen.signin import SignInScreen
+        if "signin" not in self.app._installed_screens:
+            from ..signin_screen.signin import SignInScreen
+            self.app.install_screen(SignInScreen, "signin")
 
-        self.app.install_screen(SignInScreen, "signin")
-        self.app.push_screen("signin")
-        self.app.uninstall_screen("signup")
+        self.app.switch_screen("signin")
+        self.app.uninstall_screen("singup")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "signin-btn":
