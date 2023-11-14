@@ -48,7 +48,7 @@ class SignUpScreen(Screen):
         from ..signin_screen.signin import SignInScreen
 
         self.app.install_screen(SignInScreen, "signin")
-        self.app.switch_screen("signin")
+        self.app.push_screen("signin")
         self.app.uninstall_screen("signup")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

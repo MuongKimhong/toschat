@@ -48,13 +48,13 @@ class SignInScreen(Screen):
     def redirect_home(self):
         from ..home_screen.home import HomeScreen
         self.app.install_screen(HomeScreen, "home")
-        self.app.switch_screen("home")
+        self.app.push_screen("home")
         self.app.uninstall_screen("signin")
 
     def redirect_signup(self):
         from ..signup_screen.signup import SignUpScreen
         self.app.install_screen(SignUpScreen, "signup")
-        self.app.switch_screen("signup")
+        self.app.push_screen("signup")
         self.app.uninstall_screen("signin")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
