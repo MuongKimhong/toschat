@@ -46,11 +46,13 @@ class SignInScreen(Screen):
         self.query_one("#username-input").styles.margin = (1, 12, 1, 12)
 
     def redirect_home(self):
-        pass 
+        from ..home_screen.home import HomeScreen
+        self.app.install_screen(HomeScreen, "home")
+        self.app.switch_screen("home")
+        self.app.uninstall_screen("home")
 
     def redirect_signup(self):
         from ..signup_screen.signup import SignUpScreen
-
         self.app.install_screen(SignUpScreen, "signup")
         self.app.switch_screen("signup")
         self.app.uninstall_screen("signin")
@@ -82,3 +84,5 @@ class SignInScreen(Screen):
 
                     with open(f"{home_dir}/toschat_cred.json", "w") as cred_file:
                         cred_file.write(credential)
+
+                    self.redirect_home()
