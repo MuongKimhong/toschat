@@ -52,7 +52,7 @@ class ListAllUsers(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def get(self, request):
-        users = User.objects.all().exclude(id=request.data["current_user_id"]).order_by("-id")
+        users = User.objects.all().exclude(id=request.query_params["current_user_id"]).order_by("-id")
         users = [user.serialize() for user in users]
 
         return Response({"users": users}, status=200)
