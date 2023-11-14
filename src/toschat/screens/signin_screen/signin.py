@@ -19,7 +19,7 @@ def sign_in(username, password):
     if response.get("error") is True:
         return {"error": True}
 
-    return {"error": False, "credential": response.text} 
+    return {"error": False, "credential": response} 
 
 
 class SignInScreen(Screen):
