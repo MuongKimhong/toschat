@@ -7,6 +7,13 @@ SignInScreen {
     content-align: center middle;
 }
 
+#error-text{
+    content-align: center middle;
+    color: red;
+    visibility: hidden;
+    margin-top: 1;
+}
+
 #or-txt {
     text-style: bold;
     content-align: center middle;
@@ -15,7 +22,6 @@ SignInScreen {
 #username-input {
     margin-left: 12;
     margin-right: 12;
-    margin-top: 2;
     margin-bottom: 1;
 }
 
