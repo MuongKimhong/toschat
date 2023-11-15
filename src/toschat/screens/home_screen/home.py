@@ -34,6 +34,12 @@ def get_all_users(current_user_id: int, access_token: str) -> list:
     return response["users"]
 
 
+class UserWidget(Static):
+    def compose(self) -> ComposeResult:
+        yield Static(self.renderable, classes="username-text")
+        yield Button("message", classes="start-message-btn")
+
+
 class HomeScreen(Screen):
     CSS_PATH = "home.tcss"
     credential = None
@@ -43,12 +49,12 @@ class HomeScreen(Screen):
     def compose(self) -> ComposeResult:        
         self.credential = read_cred_file()
         self.all_users = get_all_users(self.credential["user"]["id"], self.credential["access_token"])
-        self.all_usernames = [Static(user["username"], classes="username-text") for user in self.all_users]
-        
-        yield Container(
-            Horizontal(Button("Logout", id="logout")),
-            id="top-container"
-        )
+
+        for user in self.all_users:
+            self.all_usernames.append(UserWidget(user["username"])) 
+
+        yield Container(Button("Logout", id="logout"), id="top-container")
+        yield Input(placeholder="Search user", id="search-user-input")
         yield ScrollableContainer(*self.all_usernames, id='user-list-container')
     
     def logout(self):
