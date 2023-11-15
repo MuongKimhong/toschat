@@ -34,6 +34,28 @@ def get_all_users(current_user_id: int, access_token: str) -> list:
     return response["users"]
 
 
+def start_message_user(username: str, access_token: str) -> None:
+
+    url = f"{SERVER_BASE_URL}api-chats/start-message-user/" 
+    data = {"other_username": username}
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    response = requests.post(url, data=data, headers=headers)
+    response = json.loads(response.text)
+
+    path = f"{Path.home()}/toschat_cred.json"
+
+    credential = None
+    with open(path, "r") as cred_file:
+        credential = json.load(cred_file) 
+
+    data_to_store = credential
+    data_to_store["selected_chatroom_id"] = response["chatroom_id"]
+
+    with open(path, "w") as cred_file:
+        cred_file.write(json.dumps(data_to_store, indent=4))
+
+
 def search_users_by_name(current_user_id: int, access_token: str, search_text: str) -> list:
     url = f"{SERVER_BASE_URL}api-users/search-users/"
     params = {"current_user_id": current_user_id, "search_text": search_text}
@@ -116,23 +138,18 @@ class HomeScreen(Screen):
         else:
             path = f"{Path.home()}/toschat_cred.json"
 
-            credential = None
-            with open(path, "r") as cred_file:
-                credential = json.load(cred_file)    
-
             '''
             update selected_username_to_message in toschat_cred.json.
 
-            update it because we want to use it as reference to make requests
-            in chat screen
+            update it because we want to use it to make request in start_message_user func
             '''
             for index, button in enumerate(self.query(".start-message-btn")):
                 if button.name == event.button.name:
-                    credential["selected_username_to_message"] = str(self.query(".username-text")[index].renderable)
-                    credential = json.dumps(credential, indent=4)
+                    self.credential["selected_username_to_message"] = str(self.query(".username-text")[index].renderable)
                     break
 
             with open(path, "w") as cred_file:
-                cred_file.write(credential)
-
+                cred_file.write(json.dumps(self.credential, indent=4))
+            
+            start_message_user(self.credential["selected_username_to_message"], self.credential["access_token"])
             self.redirect_chatscreen()
