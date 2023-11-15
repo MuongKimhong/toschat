@@ -69,6 +69,7 @@ class HomeScreen(Screen):
         yield Container(Button("Logout", id="logout"), id="top-container")
         yield Input(placeholder="Search user", id="search-user-input")
         yield ScrollableContainer(*self.all_usernames_widget, id='user-list-container')
+        
     
     def logout(self):
         os.remove(f"{Path.home()}/toschat_cred.json")
@@ -79,6 +80,16 @@ class HomeScreen(Screen):
 
         self.app.switch_screen("signin")
         self.app.uninstall_screen("home")
+
+    
+    def redirect_chatscreen(self):
+        if "chat" not in self.app._installed_screens:
+            from ..chat_screen.chat import ChatScreen
+            self.app.install_screen(ChatScreen, "chat")
+
+        self.app.switch_screen("chat")
+        self.app.uninstall_screen("home")
+
 
     def on_input_changed(self, event: Input.Changed) -> None:
         if event.input.id == "search-user-input":
@@ -98,6 +109,8 @@ class HomeScreen(Screen):
                 for index, widget in enumerate(self.query(".username-text")):
                     widget.update(self.all_usernames_text[index])
 
+
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "logout":
             self.logout()
+        
