@@ -34,7 +34,7 @@ class StartMessageUser(APIView):
 
     def post(self, request):
         current_user = User.objects.get(id=int(extract_user_id(request)))
-        other_user = User.objects.get(username=int(request.data["other_username"]))
+        other_user = User.objects.get(username=request.data["other_username"])
 
         if ChatRoom.objects.filter(members__in=[current_user.id, other_user.id]).exists():
             chatroom = ChatRoom.objects.get(members__in=[current_user.id, other_user.id])
