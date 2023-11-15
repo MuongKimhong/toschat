@@ -120,9 +120,13 @@ class HomeScreen(Screen):
             with open(path, "r") as cred_file:
                 credential = json.load(cred_file)    
 
-            all_buttons = self.query(".start-message-btn")
+            '''
+            update selected_username_to_message in toschat_cred.json.
 
-            for index, button in enumerate(all_buttons):
+            update it because we want to use it as reference to make requests
+            in chat screen
+            '''
+            for index, button in enumerate(self.query(".start-message-btn")):
                 if button.name == event.button.name:
                     credential["selected_username_to_message"] = str(self.query(".username-text")[index].renderable)
                     credential = json.dumps(credential, indent=4)
