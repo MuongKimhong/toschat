@@ -62,8 +62,8 @@ class SearchUser(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def get(self, request):
-        users = User.objects.filter(username__icontains=request.query_params["search-text"])
-        users = users.exclude(id=int(request.query_params("current_user_id")))
+        users = User.objects.filter(username__icontains=request.query_params["search_text"])
+        users = users.exclude(id=int(request.query_params["current_user_id"]))
         users = [user.username for user in users]
 
         return Response({"users": users}, status=200)
