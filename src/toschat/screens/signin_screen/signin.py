@@ -41,9 +41,11 @@ class SignInScreen(Screen):
             classes="container"
         )
 
+
     def display_error(self):
         self.query_one("#error-text").styles.visibility = "visible"
         self.query_one("#username-input").styles.margin = (1, 12, 1, 12)
+
 
     def redirect_home(self):
         if "home" not in self.app._installed_screens:
@@ -53,6 +55,7 @@ class SignInScreen(Screen):
         self.app.switch_screen("home")
         self.app.uninstall_screen("signin")
 
+
     def redirect_signup(self):
         if "signup" not in self.app._installed_screens:
             from ..signup_screen.signup import SignUpScreen
@@ -60,6 +63,23 @@ class SignInScreen(Screen):
 
         self.app.switch_screen("signup")
         self.app.uninstall_screen("signin")
+
+
+    def create_credential_file(self, credential: dict) -> None:
+        path = f"{Path.home()}/toschat_cred.json"
+
+        # create an empty json file to store credential
+        if os.path.exists(path) is False:
+            open(path, "a").close()
+
+        data_to_store = credential
+        data_to_store["selected_username_to_message"] = ""
+        data_to_store["selected_chatroom_id"] = ""
+        data_to_store = json.dumps(data_to_store, indent=4)
+
+        with open(path, "w") as cred_file:
+            cred_file.write(data_to_store)
+
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "create-new-acc-btn":
@@ -78,15 +98,5 @@ class SignInScreen(Screen):
                 if response["error"] is True:
                     self.display_error()
                 else:
-                    credential = json.dumps(response["credential"], indent=4)
- 
-                    home_dir = Path.home()
-
-                    # create an empty json file to store credential
-                    if os.path.exists(f"{home_dir}/toschat_cred.json") is False:
-                        open(f"{home_dir}/toschat_cred.json", "a").close()                
-
-                    with open(f"{home_dir}/toschat_cred.json", "w") as cred_file:
-                        cred_file.write(credential)
-
+                    self.create_credential_file(response["credential"])
                     self.redirect_home()
