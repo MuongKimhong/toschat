@@ -48,7 +48,7 @@ def search_users_by_name(current_user_id: int, access_token: str, search_text: s
 class UserWidget(Static):
     def compose(self) -> ComposeResult:
         yield Static(self.renderable, classes="username-text")
-        yield Button("message", classes="start-message-btn")
+        yield Button("message", classes="start-message-btn", name=f"{self.renderable}")
 
 
 class HomeScreen(Screen):
@@ -113,4 +113,22 @@ class HomeScreen(Screen):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "logout":
             self.logout()
-        
+        else:
+            path = f"{Path.home()}/toschat_cred.json"
+
+            credential = None
+            with open(path, "r") as cred_file:
+                credential = json.load(cred_file)    
+
+            all_buttons = self.query(".start-message-btn")
+
+            for index, button in enumerate(all_buttons):
+                if button.name == event.button.name:
+                    credential["selected_username_to_message"] = str(self.query(".username-text")[index].renderable)
+                    credential = json.dumps(credential, indent=4)
+                    break
+
+            with open(path, "w") as cred_file:
+                cred_file.write(credential)
+
+            self.redirect_chatscreen()
