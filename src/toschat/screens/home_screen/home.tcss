@@ -18,3 +18,10 @@ Horizontal {
     margin-right: 1;
     border: none;
 }
+
+#user-list-container{
+    align: center middle;
+    height: 30; 
+    margin-left: 10;
+    margin-right: 10; 
+}
