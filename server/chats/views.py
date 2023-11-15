@@ -40,8 +40,8 @@ class StartMessageUser(APIView):
             chatroom = ChatRoom.objects.get(members__in=[current_user.id, other_user.id])
         else:
             chatroom = ChatRoom.objects.create()
-            chatroom.add(current_user)
-            chatroom.add(other_user)
+            chatroom.members.add(current_user)
+            chatroom.members.add(other_user)
 
         return Response({"chatroom_id": chatroom.id}, status=200)
 

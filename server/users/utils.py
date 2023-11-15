@@ -1,5 +1,7 @@
 import jwt
 
+from users.models import User
+
 
 # get user id from token
 def extract_user_id(request):
