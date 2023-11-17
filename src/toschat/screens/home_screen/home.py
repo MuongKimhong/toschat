@@ -140,7 +140,6 @@ class HomeScreen(Screen):
 
             '''
             update selected_username_to_message in toschat_cred.json.
-
             update it because we want to use it to make request in start_message_user func
             '''
             for index, button in enumerate(self.query(".start-message-btn")):
