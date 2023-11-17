@@ -30,11 +30,33 @@ MessageWidget{
     content-align: center middle;
 }
 
+MessageAreaWidget {
+    align: center middle;
+    height: 30;
+}
+
 #messages-container{
     align: left bottom;
-    height: 25;
-    margin-left: 10;
-    margin-right: 10;
+    height: 30;
+    margin-left: 9;
+    margin-right: 9;
     margin-top: 2;
-    background: green;
+    border: solid black;
+}
+
+#messages-list-view{
+    background: black;
+    height: 30;
+    padding: 0;
+}
+
+.list-item{
+    background: black;
+}
+
+#message-input{
+    align: center middle;
+    margin-left: 8;
+    margin-right: 8;
+    margin-top: 2;
 }

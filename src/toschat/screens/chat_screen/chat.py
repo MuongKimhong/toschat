@@ -1,10 +1,14 @@
 from textual.widgets import Static, Header, Input, Button
-from textual.containers import Container, Horizontal, ScrollableContainer
+from textual.widgets import ListView, ListItem
+from textual.containers import Container, Horizontal
 from textual.app import ComposeResult
+from textual.reactive import reactive
 from textual.screen import Screen
+from textual.widget import Widget
 from rich.segment import Segment
 from textual.strip import Strip
 from pathlib import Path
+from textual import events
 import requests
 import time
 import json
@@ -58,19 +62,44 @@ class MessageWidget(Static):
         yield Static(f"{renderable_split[0]}: {renderable_split[1]}", classes="username")
 
 
-class ChatScreen(Screen):
-    CSS_PATH = "chat.tcss"
+class MessageAreaWidget(Widget):
+    messages = [
+        {"sender": "richard", "text": "Hello all friends"},
+        {"sender": "erlich", "text": "whats up buddy"},
+        {"sender": "roman", "text": "what a good day"},
+        {"sender": "gilfoyle", "text": "shut the fuck up"},
+        {"sender": "soap", "text": "all eyes on me"}
+    ]
+    messages_widget = reactive([]) 
 
     def compose(self) -> ComposeResult:
-        messages = [
-            {"sender": "richard", "text": "Hello all friends"},
-            {"sender": "erlich", "text": "whats up buddy"},
-            {"sender": "roman", "text": "what a good day"},
-            {"sender": "gilfoyle", "text": "shut the fuck up"},
-            {"sender": "soap", "text": "all eyes on me"}
-        ]
-        all_messages_widget = [MessageWidget(f"{message['sender']}-{message['text']}") for message in messages]
+        for message in self.messages:
+            self.messages_widget.append(
+                ListItem(MessageWidget(f"{message['sender']}-{message['text']}"), classes="list-item")
+            )
+
+        yield Container(
+            ListView(*self.messages_widget, initial_index=None, id="messages-list-view"),
+            id="messages-container"
+        )
+
+
+class ChatScreen(Screen):
+    CSS_PATH = "chat.tcss"
+    credential = {}
+
+    def compose(self) -> ComposeResult:
+        with open(f"{Path.home()}/toschat_cred.json", "r") as cred_file:
+            self.credential = json.load(cred_file)
+
         yield NavbarWidget()
-        yield ScrollableContainer(*all_messages_widget, id="messages-container")
+        yield MessageAreaWidget()
+        yield Input(placeholder="Write message here", id="message-input")
 
-
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        if event.input.id == "message-input":
+            self.query_one("#messages-list-view").append(
+                ListItem(MessageWidget(f"{self.credential['user']['username']}-{event.input.value}"), 
+                classes="list-item")
+            )
+            event.input.value = ""
