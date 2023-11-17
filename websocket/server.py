@@ -36,6 +36,7 @@ def handle_receiving_message(client):
             break
 
 
+# listen to event when users connect to websocket server
 def listen_to_client_connection():
     while True:
         client, address = server.accept()
@@ -48,4 +49,5 @@ def listen_to_client_connection():
 
 
 if __name__ == "__main__":
+    init_websocket_server()
     listen_to_client_connection()
