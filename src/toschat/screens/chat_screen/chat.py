@@ -47,8 +47,30 @@ class NavbarWidget(Static):
             self.logout()
 
 
+class MessageWidget(Static):
+    def compose(self) -> ComposeResult:
+        '''
+        renderable arg will be name-messagetextblahblah 
+        renderable_split[0] is name
+        renderable_split[1] is messagetextblahblahblah
+        '''
+        renderable_split = self.renderable.split("-")
+        yield Static(f"{renderable_split[0]}: {renderable_split[1]}", classes="username")
+
+
 class ChatScreen(Screen):
     CSS_PATH = "chat.tcss"
 
     def compose(self) -> ComposeResult:
+        messages = [
+            {"sender": "richard", "text": "Hello all friends"},
+            {"sender": "erlich", "text": "whats up buddy"},
+            {"sender": "roman", "text": "what a good day"},
+            {"sender": "gilfoyle", "text": "shut the fuck up"},
+            {"sender": "soap", "text": "all eyes on me"}
+        ]
+        all_messages_widget = [MessageWidget(f"{message['sender']}-{message['text']}") for message in messages]
         yield NavbarWidget()
+        yield ScrollableContainer(*all_messages_widget, id="messages-container")
+
+

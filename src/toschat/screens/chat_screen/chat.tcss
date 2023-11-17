@@ -9,6 +9,11 @@ NavbarWidget {
     background: rgb(91, 81, 81);
 }
 
+MessageWidget{
+    layout: horizontal;
+    height: 2;
+}
+
 #back-btn {
     dock: left;
     border: none;
@@ -23,4 +28,13 @@ NavbarWidget {
 
 #another-username{
     content-align: center middle;
+}
+
+#messages-container{
+    align: left bottom;
+    height: 25;
+    margin-left: 10;
+    margin-right: 10;
+    margin-top: 2;
+    background: green;
 }
