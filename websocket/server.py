@@ -10,14 +10,15 @@ server = None
 clients = []
 
 
-def init_websocket_server():
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind((WEB_SOCKET_HOST, PORT))
-    server.listen()
+# init websocket server
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((WEB_SOCKET_HOST, PORT))
+server.listen()
 
 
 # send message to all clients
 def broadcast(message):
+    print("forward message")
     for client in clients:
         client.send(message)
 
@@ -26,11 +27,13 @@ def handle_receiving_message(client):
     while True:
         try:
             message = client.recv(MAX_BYTE)
+            print("message receive") 
             broadcast(message)  
         except:
             # something went wrong
             # disconnect client from socket connection
             # index = clients.index(client)
+            print("something wrong")
             clients.remove(client)
             client.close()
             break
@@ -49,5 +52,4 @@ def listen_to_client_connection():
 
 
 if __name__ == "__main__":
-    init_websocket_server()
     listen_to_client_connection()

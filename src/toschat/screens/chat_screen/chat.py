@@ -14,7 +14,7 @@ import time
 import json
 import os
 
-from ..variables import SERVER_BASE_URL   
+from ..variables import SERVER_BASE_URL
 
 
 class NavbarWidget(Static):
