@@ -9,6 +9,9 @@ from rich.segment import Segment
 from textual.strip import Strip
 from pathlib import Path
 from textual import events
+from socketio.exceptions import TimeoutError
+import threading
+import socketio
 import requests
 import time
 import json
@@ -87,19 +90,24 @@ class MessageAreaWidget(Widget):
 class ChatScreen(Screen):
     CSS_PATH = "chat.tcss"
     credential = {}
+    websocket = None
 
     def compose(self) -> ComposeResult:
         with open(f"{Path.home()}/toschat_cred.json", "r") as cred_file:
             self.credential = json.load(cred_file)
-
+        
         yield NavbarWidget()
         yield MessageAreaWidget()
         yield Input(placeholder="Write message here", id="message-input")
 
+        self.websocket = socketio.SimpleClient() 
+        self.websocket.connect("http://localhost:3000")          
+
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if event.input.id == "message-input":
-            self.query_one("#messages-list-view").append(
-                ListItem(MessageWidget(f"{self.credential['user']['username']}-{event.input.value}"), 
-                classes="list-item")
-            )
+            # self.query_one("#messages-list-view").append(
+            #     ListItem(MessageWidget(f"{self.credential['user']['username']}-{event.input.value}"), 
+            #     classes="list-item")
+            # )
             event.input.value = ""
+            self.websocket.emit("send message", {"sender": "testing", "text": "hey"})
