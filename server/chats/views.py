@@ -37,7 +37,7 @@ class StartMessageUser(APIView):
         other_user = User.objects.get(username=request.data["other_username"])
 
         if ChatRoom.objects.filter(members__in=[current_user.id, other_user.id]).exists():
-            chatroom = ChatRoom.objects.get(members__in=[current_user.id, other_user.id])
+            chatroom = ChatRoom.objects.filter(members__in=[current_user.id, other_user.id]).first()
         else:
             chatroom = ChatRoom.objects.create()
             chatroom.members.add(current_user)

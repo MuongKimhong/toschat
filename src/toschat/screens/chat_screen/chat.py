@@ -1,6 +1,6 @@
 from textual.widgets import Static, Header, Input, Button
-from textual.widgets import ListView, ListItem
 from textual.containers import Container, Horizontal
+from textual.widgets import ListView, ListItem
 from textual.app import ComposeResult
 from textual.reactive import reactive
 from textual.screen import Screen
@@ -18,6 +18,10 @@ import json
 import os
 
 from ..variables import SERVER_BASE_URL
+
+
+websocket = socketio.SimpleClient()
+websocket.connect("http://localhost:3000")
 
 
 class NavbarWidget(Static):
@@ -90,7 +94,6 @@ class MessageAreaWidget(Widget):
 class ChatScreen(Screen):
     CSS_PATH = "chat.tcss"
     credential = {}
-    websocket = None
 
     def compose(self) -> ComposeResult:
         with open(f"{Path.home()}/toschat_cred.json", "r") as cred_file:
@@ -98,10 +101,7 @@ class ChatScreen(Screen):
         
         yield NavbarWidget()
         yield MessageAreaWidget()
-        yield Input(placeholder="Write message here", id="message-input")
-
-        self.websocket = socketio.SimpleClient() 
-        self.websocket.connect("http://localhost:3000")          
+        yield Input(placeholder="Write message here", id="message-input") 
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if event.input.id == "message-input":
@@ -110,4 +110,4 @@ class ChatScreen(Screen):
             #     classes="list-item")
             # )
             event.input.value = ""
-            self.websocket.emit("send message", {"sender": "testing", "text": "hey"})
+            websocket.emit("send message", {"sender": "testing", "text": "hey"})

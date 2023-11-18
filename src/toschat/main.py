@@ -22,8 +22,8 @@ class TosChat(App):
         # # redirect home screen
         else:
             self.install_screen(HomeScreen, "home")
-            self.push_screen("home")
-
+            self.push_screen("home") 
+            
 
 if __name__ == "__main__":
     app = TosChat()
