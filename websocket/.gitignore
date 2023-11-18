@@ -1,3 +1,2 @@
-__pycache__
-client.py
-server_t.py
+node_modules
+package-lock.json
