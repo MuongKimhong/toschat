@@ -9,7 +9,6 @@ from rich.segment import Segment
 from textual.strip import Strip
 from pathlib import Path
 from textual import events
-from socketio.exceptions import TimeoutError
 import threading
 import socketio
 import requests
@@ -22,6 +21,36 @@ from ..variables import SERVER_BASE_URL
 
 websocket = socketio.SimpleClient()
 websocket.connect("http://localhost:3000")
+
+
+def create_test_file():
+    path = f"{Path.home()}/Development/toschat/database.json"
+
+    # create an empty json file to store credential
+    if os.path.exists(path) is False:
+        open(path, "a").close()
+
+        with open(path, "w") as database_file:
+            database_file.wirte(json.dumps({"messages": []}, indent=4))
+
+
+def read_test_file():
+    path = f"{Path.home()}/Development/toschat/database.json"
+
+    with open(path, "r") as database_file:
+            data = json.load(database_file)["messages"]    
+            
+    return data
+
+
+def write_test_file(data):
+    path = f"{Path.home()}/Development/toschat/database.json"
+
+    old_data = read_test_file()
+    old_data.append(data)
+
+    with open(path, "w") as database_file:
+        database_file.write(json.dumps(old_data))
 
 
 class NavbarWidget(Static):
@@ -70,26 +99,18 @@ class MessageWidget(Static):
 
 
 class MessageAreaWidget(Widget):
-    messages = [
-        {"sender": "richard", "text": "Hello all friends"},
-        {"sender": "erlich", "text": "whats up buddy"},
-        {"sender": "roman", "text": "what a good day"},
-        {"sender": "gilfoyle", "text": "shut the fuck up"},
-        {"sender": "soap", "text": "all eyes on me"}
-    ]
-    messages_widget = reactive([]) 
+    list_view = reactive(ListView(*[], id="messages-list-view"), always_update=True)
 
-    def compose(self) -> ComposeResult:
-        for message in self.messages:
-            self.messages_widget.append(
+    def compose(self) -> ComposeResult: 
+        create_test_file()
+        messages = read_test_file()
+
+        yield Container(self.list_view, id="messages-container")
+
+        for message in messages:
+            self.list_view.append(
                 ListItem(MessageWidget(f"{message['sender']}-{message['text']}"), classes="list-item")
             )
-
-        yield Container(
-            ListView(*self.messages_widget, initial_index=None, id="messages-list-view"),
-            id="messages-container"
-        )
-
 
 class ChatScreen(Screen):
     CSS_PATH = "chat.tcss"
@@ -102,12 +123,16 @@ class ChatScreen(Screen):
         yield NavbarWidget()
         yield MessageAreaWidget()
         yield Input(placeholder="Write message here", id="message-input") 
+    
+    def websocket_receive(self):
+        while True:
+            event = websocket.receive()
+            if event[0] == "newmessage":
+                self.query_one(MessageAreaWidget) = self.query_one(MessageAreaWidget).refresh()
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if event.input.id == "message-input":
-            # self.query_one("#messages-list-view").append(
-            #     ListItem(MessageWidget(f"{self.credential['user']['username']}-{event.input.value}"), 
-            #     classes="list-item")
-            # )
-            event.input.value = ""
-            websocket.emit("send message", {"sender": "testing", "text": "hey"})
+            if event.input.value != "":
+                write_test_file({"sender": f"{self.credential['user']['username']}", "text": event.input.value})
+                websocket.emit("send message", {"sender": f"{self.credential['user']['username']}", "text": event.input.value})        
+                event.input.value = ""
