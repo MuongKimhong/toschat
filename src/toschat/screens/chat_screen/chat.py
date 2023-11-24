@@ -25,8 +25,6 @@ websocket = socketio.SimpleClient()
 websocket.connect("http://localhost:3000")
 
 
-restart = False
-
 def restart_app():
     while True:
         if restart is True:
