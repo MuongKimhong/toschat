@@ -3,11 +3,11 @@ from textual.containers import Container, Horizontal
 from textual.widgets import ListView, ListItem
 from textual.app import ComposeResult
 from textual.reactive import reactive
+from textual.message import Message
 from textual.screen import Screen
 from textual.widget import Widget
 from pathlib import Path
 from textual import work
-from textual.message import Message
 import socketio
 import requests
 import time
