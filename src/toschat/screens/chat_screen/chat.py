@@ -5,13 +5,9 @@ from textual.app import ComposeResult
 from textual.reactive import reactive
 from textual.screen import Screen
 from textual.widget import Widget
-from rich.segment import Segment
-from textual.strip import Strip
 from pathlib import Path
 from textual import work
-from textual import events
 from textual.message import Message
-import threading
 import socketio
 import requests
 import time
@@ -21,33 +17,12 @@ import os
 from ..variables import SERVER_BASE_URL
 
 
+credential = {}
+with open(f"{Path.home()}/toschat_cred.json", "r") as cred_file:
+    credential = json.load(cred_file)
+
 websocket = socketio.SimpleClient()
 websocket.connect("http://localhost:3000")
-
-
-def restart_app():
-    while True:
-        if restart is True:
-            import sys
-            os.execv(sys.executable, ['python3'] + sys.argv)
-
-restart_thread = threading.Thread(target=restart_app)
-restart_thread.start()
-
-
-class WebSocketReceivingThread(threading.Thread):
-    def listen_websocket_receive_event(self):
-        while True:
-            event = websocket.receive()
-            if event[0] == "newmessage":
-                path = f"{Path.home()}/Development/toschat/joymisoussreaymean.json"
-                open(path, "a").close() 
-        
-    def run(self):
-        try:
-            self.listen_websocket_receive_event()
-        except BaseException as e:
-            raise e
 
 
 def read_test_file():
@@ -67,6 +42,28 @@ def write_test_file(data):
 
     with open(path, "w") as database_file:
         database_file.write(json.dumps({"messages": old_data}, indent=4))
+
+
+def get_messages_in_chatroom() -> list:
+    url = f"{SERVER_BASE_URL}api-chats/get-messages/"
+    params = {"chatroom_id": credential['selected_chatroom_id']}
+    headers = {"Authorization": f"Bearer {credential['access_token']}"}
+
+    response = requests.get(url, params=params, headers=headers)
+    response: dict = json.loads(response.text)
+
+    return response["messages"] 
+
+
+def send_message(text: str) -> dict:
+    url = f"{SERVER_BASE_URL}api-chats/send-message/"
+    data = {"chatroom_id": credential['selected_chatroom_id'], "text": text}
+    headers = {"Authorization": f"Bearer {credential['access_token']}"}
+
+    response = requests.post(url, data=data, headers=headers)
+    response: dict = json.loads(response.text)
+
+    return response["message"]
 
 
 class NavbarWidget(Static):
@@ -125,13 +122,13 @@ class MessageAreaWidget(Widget):
         super().__init__()
 
     def compose(self) -> ComposeResult: 
-        messages = read_test_file()
+        messages = get_messages_in_chatroom()
 
         yield Container(self.list_view, id="messages-container")
 
         for message in messages:
             self.list_view.append(
-                ListItem(MessageWidget(f"{message['sender']}-{message['text']}"), classes="list-item")
+                ListItem(MessageWidget(f"{message['sender']['username']}-{message['text']}"), classes="list-item")
             ) 
         self.websocket_receive()
         
@@ -140,34 +137,24 @@ class MessageAreaWidget(Widget):
         while True:
             event = websocket.receive()
             if event[0] == "newmessage":
-                path = f"{Path.home()}/Development/toschat/joymisous.json"
-
-                # create an empty json file to store credential
-                if os.path.exists(path) is False:
-                    open(path, "a").close()
-
                 self.post_message(self.Receive(event[1]))
 
 class ChatScreen(Screen):
     CSS_PATH = "chat.tcss"
-    credential = {}
 
-    def compose(self) -> ComposeResult:
-        with open(f"{Path.home()}/toschat_cred.json", "r") as cred_file:
-            self.credential = json.load(cred_file)
-        
+    def compose(self) -> ComposeResult: 
         yield NavbarWidget()
         yield MessageAreaWidget()
         yield Input(placeholder="Write message here", id="message-input") 
     
     def on_message_area_widget_receive(self, message: MessageAreaWidget.Receive) -> None:
         self.query_one(MessageAreaWidget).list_view.append(
-            ListItem(MessageWidget(f"{message.event['sender']}-{message.event['text']}"), classes="list-item")
+            ListItem(MessageWidget(f"{message.event['sender']['username']}-{message.event['text']}"), classes="list-item")
         )
                 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if event.input.id == "message-input":
             if event.input.value != "":
-                write_test_file({"sender": f"{self.credential['user']['username']}", "text": event.input.value})
-                websocket.emit("send message", {"sender": f"{self.credential['user']['username']}", "text": event.input.value})        
+                new_message = send_message(event.input.value)
+                websocket.emit("send message", new_message)        
                 event.input.value = ""
