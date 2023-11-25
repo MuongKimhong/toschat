@@ -65,9 +65,8 @@ class NavbarWidget(Static):
         if "home" not in self.app._installed_screens:
             from ..home_screen.home import HomeScreen
             self.app.install_screen(HomeScreen, "home")
-        
-        self.app.switch_screen("home")
-        self.app.uninstall_screen("chat")
+
+        self.app.push_screen("home") 
 
     def logout(self):
         os.remove(f"{Path.home()}/toschat_cred.json")
@@ -76,8 +75,7 @@ class NavbarWidget(Static):
             from ..signin_screen.signin import SignInScreen
             self.app.install_screen(SignInScreen, "signin")
 
-        self.app.switch_screen("signin")
-        self.app.uninstall_screen("chat")
+        self.app.push_screen("signin")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back-btn":

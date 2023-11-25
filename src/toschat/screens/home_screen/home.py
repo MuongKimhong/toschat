@@ -1,6 +1,7 @@
 from textual.widgets import Static, Header, Input, Button
 from textual.containers import Container, Horizontal, ScrollableContainer
 from textual.app import ComposeResult
+from textual.message import Message
 from textual.screen import Screen
 from rich.segment import Segment
 from textual.strip import Strip
@@ -82,11 +83,12 @@ class HomeScreen(Screen):
 
     def compose(self) -> ComposeResult:        
         self.credential = read_cred_file()
-        self.all_users = get_all_users(self.credential["user"]["id"], self.credential["access_token"])
+        if len(self.all_users) == 0:
+            self.all_users = get_all_users(self.credential["user"]["id"], self.credential["access_token"])
 
-        for user in self.all_users:
-            self.all_usernames_widget.append(UserWidget(user["username"])) 
-            self.all_usernames_text.append(user["username"])
+            for user in self.all_users:
+                self.all_usernames_widget.append(UserWidget(user["username"])) 
+                self.all_usernames_text.append(user["username"])
 
         yield Container(Button("Logout", id="logout"), id="top-container")
         yield Input(placeholder="Search user", id="search-user-input")
@@ -100,8 +102,7 @@ class HomeScreen(Screen):
             from ..signin_screen.signin import SignInScreen
             self.app.install_screen(SignInScreen, "signin")
 
-        self.app.switch_screen("signin")
-        self.app.uninstall_screen("home")
+        self.app.push_screen("signin")
 
     
     def redirect_chatscreen(self):
@@ -109,8 +110,7 @@ class HomeScreen(Screen):
             from ..chat_screen.chat import ChatScreen
             self.app.install_screen(ChatScreen, "chat")
 
-        self.app.switch_screen("chat")
-        self.app.uninstall_screen("home")
+        self.app.push_screen("chat")
 
 
     def on_input_changed(self, event: Input.Changed) -> None:

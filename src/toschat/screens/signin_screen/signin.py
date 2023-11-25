@@ -52,8 +52,7 @@ class SignInScreen(Screen):
             from ..home_screen.home import HomeScreen
             self.app.install_screen(HomeScreen, "home")
 
-        self.app.switch_screen("home")
-        self.app.uninstall_screen("signin")
+        self.app.push_screen("home")
 
 
     def redirect_signup(self):
@@ -61,8 +60,7 @@ class SignInScreen(Screen):
             from ..signup_screen.signup import SignUpScreen
             self.app.install_screen(SignUpScreen, "signup")
 
-        self.app.switch_screen("signup")
-        self.app.uninstall_screen("signin")
+        self.app.push_screen("signup")
 
 
     def create_credential_file(self, credential: dict) -> None:
