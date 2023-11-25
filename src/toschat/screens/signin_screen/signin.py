@@ -26,6 +26,15 @@ class SignInScreen(Screen):
     CSS_PATH = "signin.tcss"
 
     def compose(self) -> ComposeResult:
+        if "chat" in self.app._installed_screens:
+            self.app.uninstall_screen("chat")
+        
+        if "signup" in self.app._installed_screens:
+            self.app.uninstall_screen("signup")
+
+        if "home" in self.app._installed_screens:
+            self.app.uninstall_screen("home")
+
         yield Header()
         yield Static("Sign In", classes="sign-in-text")
         yield Static("Username or password is incorrect", id="error-text")
@@ -52,7 +61,7 @@ class SignInScreen(Screen):
             from ..home_screen.home import HomeScreen
             self.app.install_screen(HomeScreen, "home")
 
-        self.app.push_screen("home")
+        self.app.switch_screen("home")
 
 
     def redirect_signup(self):
@@ -60,7 +69,7 @@ class SignInScreen(Screen):
             from ..signup_screen.signup import SignUpScreen
             self.app.install_screen(SignUpScreen, "signup")
 
-        self.app.push_screen("signup")
+        self.app.switch_screen("signup")
 
 
     def create_credential_file(self, credential: dict) -> None:

@@ -24,6 +24,9 @@ class SignUpScreen(Screen):
     CSS_PATH = "signup.tcss"
 
     def compose(self) -> ComposeResult:
+        if "signin" in self.app._installed_screens:
+            self.app.uninstall_screen("signin")
+
         yield Header()
         yield Static("Create new account", classes="create-new-acc-text")
         yield Static("", id="error-text")
@@ -49,7 +52,7 @@ class SignUpScreen(Screen):
             from ..signin_screen.signin import SignInScreen
             self.app.install_screen(SignInScreen, "signin")
 
-        self.app.push_screen("signin")
+        self.app.switch_screen("signin")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "signin-btn":

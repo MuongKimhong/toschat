@@ -66,7 +66,7 @@ class NavbarWidget(Static):
             from ..home_screen.home import HomeScreen
             self.app.install_screen(HomeScreen, "home")
 
-        self.app.push_screen("home") 
+        self.app.switch_screen("home") 
 
     def logout(self):
         os.remove(f"{Path.home()}/toschat_cred.json")
@@ -75,7 +75,7 @@ class NavbarWidget(Static):
             from ..signin_screen.signin import SignInScreen
             self.app.install_screen(SignInScreen, "signin")
 
-        self.app.push_screen("signin")
+        self.app.switch_screen("signin")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back-btn":
@@ -131,6 +131,9 @@ class ChatScreen(Screen):
     CSS_PATH = "chat.tcss"
 
     def compose(self) -> ComposeResult: 
+        if "home" in self.app._installed_screens:
+            self.app.uninstall_screen("home")
+
         yield NavbarWidget()
         yield MessageAreaWidget()
         yield Input(placeholder="Write message here", id="message-input") 

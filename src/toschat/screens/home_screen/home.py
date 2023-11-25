@@ -83,6 +83,13 @@ class HomeScreen(Screen):
 
     def compose(self) -> ComposeResult:        
         self.credential = read_cred_file()
+
+        if "chat" in self.app._installed_screens:
+            self.app.uninstall_screen("chat")
+
+        if "signin" in self.app._installed_screens:
+            self.app.uninstall_screen("signin")
+
         if len(self.all_users) == 0:
             self.all_users = get_all_users(self.credential["user"]["id"], self.credential["access_token"])
 
@@ -102,7 +109,7 @@ class HomeScreen(Screen):
             from ..signin_screen.signin import SignInScreen
             self.app.install_screen(SignInScreen, "signin")
 
-        self.app.push_screen("signin")
+        self.app.switch_screen("signin")
 
     
     def redirect_chatscreen(self):
@@ -110,7 +117,7 @@ class HomeScreen(Screen):
             from ..chat_screen.chat import ChatScreen
             self.app.install_screen(ChatScreen, "chat")
 
-        self.app.push_screen("chat")
+        self.app.switch_screen("chat")
 
 
     def on_input_changed(self, event: Input.Changed) -> None:
