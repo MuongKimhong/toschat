@@ -52,6 +52,7 @@ MessageAreaWidget {
 
 .list-item{
     background: black;
+    align: right middle;
 }
 
 #message-input{

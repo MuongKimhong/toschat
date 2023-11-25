@@ -1,4 +1,5 @@
 from textual.widgets import Static, Header, Input, Button
+from textual.worker import Worker, get_current_worker, NoActiveWorker
 from textual.containers import Container, Horizontal
 from textual.widgets import ListView, ListItem
 from textual.app import ComposeResult
@@ -48,6 +49,10 @@ def send_message(text: str) -> dict:
 
 
 class NavbarWidget(Static):
+    class Leave(Message):
+        def __init__(self):
+            super().__init__()
+
     def compose(self) -> ComposeResult:
         with open(f"{Path.home()}/toschat_cred.json", "r") as cred_file:
             another_username = json.load(cred_file)["selected_username_to_message"]
@@ -76,6 +81,7 @@ class NavbarWidget(Static):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back-btn":
+            self.post_message(self.Leave())
             self.redirect_homescreen()
         elif event.button.id == "logout-btn":
             self.logout()
@@ -111,7 +117,8 @@ class MessageAreaWidget(Widget):
             self.list_view.append(
                 ListItem(message_widget, classes="list-item")
             ) 
-
+        
+        self.list_view.scroll_end()
         self.websocket_receive()
         
     @work(exclusive=True, thread=True)
@@ -136,6 +143,16 @@ class ChatScreen(Screen):
         self.query_one(MessageAreaWidget).list_view.append(
             ListItem(message_widget, classes="list-item")
         )
+        self.query_one(MessageAreaWidget).list_view.scroll_end()
+    
+    def on_navbar_widget_leave(self, message: NavbarWidget.Leave) -> None: 
+        try:
+            current_worker = get_current_worker()
+
+            if current_worker.is_running:
+                current_worker.cancel()
+        except NoActiveWorker:
+            pass
                 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if event.input.id == "message-input":
