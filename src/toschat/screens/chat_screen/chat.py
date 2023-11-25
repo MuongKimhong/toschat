@@ -25,25 +25,6 @@ websocket = socketio.SimpleClient()
 websocket.connect("http://localhost:3000")
 
 
-def read_test_file():
-    path = f"{Path.home()}/database.json"
-
-    with open(path, "r") as database_file:
-            data = json.load(database_file)["messages"]    
-            
-    return data
-
-
-def write_test_file(data):
-    path = f"{Path.home()}/database.json"
-
-    old_data = read_test_file()
-    old_data.append(data)
-
-    with open(path, "w") as database_file:
-        database_file.write(json.dumps({"messages": old_data}, indent=4))
-
-
 def get_messages_in_chatroom() -> list:
     url = f"{SERVER_BASE_URL}api-chats/get-messages/"
     params = {"chatroom_id": credential['selected_chatroom_id']}
@@ -123,13 +104,14 @@ class MessageAreaWidget(Widget):
 
     def compose(self) -> ComposeResult: 
         messages = get_messages_in_chatroom()
-
         yield Container(self.list_view, id="messages-container")
 
         for message in messages:
+            message_widget = MessageWidget(f"{message['sender']['username']}-{message['text']}")
             self.list_view.append(
-                ListItem(MessageWidget(f"{message['sender']['username']}-{message['text']}"), classes="list-item")
+                ListItem(message_widget, classes="list-item")
             ) 
+
         self.websocket_receive()
         
     @work(exclusive=True, thread=True)
@@ -148,8 +130,10 @@ class ChatScreen(Screen):
         yield Input(placeholder="Write message here", id="message-input") 
     
     def on_message_area_widget_receive(self, message: MessageAreaWidget.Receive) -> None:
+        message_widget = MessageWidget(f"{message.event['sender']['username']}-{message.event['text']}")
+
         self.query_one(MessageAreaWidget).list_view.append(
-            ListItem(MessageWidget(f"{message.event['sender']['username']}-{message.event['text']}"), classes="list-item")
+            ListItem(message_widget, classes="list-item")
         )
                 
     def on_input_submitted(self, event: Input.Submitted) -> None:
