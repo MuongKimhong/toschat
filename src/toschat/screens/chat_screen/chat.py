@@ -121,6 +121,7 @@ class MessageAreaWidget(Widget):
             if event[0] == "newmessage":
                 self.post_message(self.Receive(event[1]))
 
+
 class ChatScreen(Screen):
     CSS_PATH = "chat.tcss"
 
