@@ -164,12 +164,9 @@ class ChatScreen(Screen):
         # cancel worker
         try:
             current_worker = get_current_worker()
-            log("current worker")
             if current_worker.is_running:
                 current_worker.cancel()
-                log("canccel")
         except NoActiveWorker:
-            log("no worker")
             pass
 
         # clear data
@@ -177,10 +174,15 @@ class ChatScreen(Screen):
 
     
     def on_receive(self, message: Receive) -> None:
-        message_widget = MessageWidget(f"{message.new_message['sender']['username']}-{message.new_message['text']}")
-        self.list_view.append(
-            ListItem(message_widget, classes="list-item")
-        )
+        message_receiver = message.new_message["receiver"]["username"]
+        message_sender   = message.new_message["sender"]["username"]
+        current_username = self.credential["user"]["username"]
+
+        if (current_username == message_receiver) or (current_username == message_sender):
+            message_widget = MessageWidget(f"{message.new_message['sender']['username']}-{message.new_message['text']}")
+            self.list_view.append(
+                ListItem(message_widget, classes="list-item")
+            )
 
 
     def on_input_submitted(self, event: Input.Submitted) -> None:

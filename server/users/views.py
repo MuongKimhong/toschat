@@ -55,7 +55,7 @@ class ListAllUsers(APIView):
         if User.objects.all().count() > 15:
             users = list(User.objects.all().exclude(id=request.query_params["current_user_id"]))[:15]
         else:
-            users = User.objects.all().exclude(id=query_params["current_user_id"])
+            users = User.objects.all().exclude(id=request.query_params["current_user_id"])
 
         users = [user.serialize() for user in users]
         return Response({"users": users}, status=200)
