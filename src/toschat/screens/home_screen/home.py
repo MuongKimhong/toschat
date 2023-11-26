@@ -167,7 +167,6 @@ class HomeScreen(Screen):
     CSS_PATH = "home.tcss"
     all_users = []
     credential = None
-    all_usernames_widget = []
     list_view = ListView(*[], id="list-view")
     credential_file_path = f"{Path.home()}/toschat_cred.json"
 
@@ -194,7 +193,6 @@ class HomeScreen(Screen):
         self.all_users.clear()
         self.list_view.clear()
         self.credential = None
-        self.all_usernames_widget.clear()
 
     def on_screen_resume(self, event: events.ScreenResume) -> None:
         self.read_cred_file()
