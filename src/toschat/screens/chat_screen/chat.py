@@ -205,13 +205,18 @@ class NavbarWidget(Static):
 class ChatScreen(Screen):
     CSS_PATH = "chat.tcss" 
 
+
     def compose(self) -> ComposeResult:
         yield NavbarWidget()
 
+
     def on_screen_resume(self, event: events.ScreenResume) -> None:
+
+        # update username on navbar based on cred_file
         with open(f"{Path.home()}/toschat_cred.json", "r") as cred_file:
             another_username = json.load(cred_file)["selected_username_to_message"]
             self.query_one("#another-username").update(another_username)
+
 
     def on_screen_suspend(self, event: events.ScreenSuspend) -> None:
         pass
