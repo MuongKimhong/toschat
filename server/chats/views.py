@@ -21,10 +21,13 @@ class SendMessage(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def post(self, request):
+        receiver = User.objects.get(username=request.data["another_username"])
+        
         message = Message.objects.create(
             sender_id=extract_user_id(request),
             chatroom_id=request.data["chatroom_id"],
-            text=request.data["text"]
+            text=request.data["text"],
+            receiver=receiver
         )
         return Response({"message": message.serialize()}, status=200)
 
