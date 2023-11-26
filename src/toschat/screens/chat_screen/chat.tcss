@@ -9,6 +9,17 @@ NavbarWidget {
     background: rgb(91, 81, 81);
 }
 
+#navbar-widget {
+    layout: horizontal;
+    height: 3;
+    margin: 1;
+    padding-top: 1;
+    padding-bottom: 1;
+    padding-left: 3;
+    padding-right: 3;
+    background: rgb(91, 81, 81);
+}
+
 MessageWidget{
     layout: horizontal;
     height: 2;

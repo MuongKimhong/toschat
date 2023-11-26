@@ -6,6 +6,7 @@ from textual.screen import Screen
 from rich.segment import Segment
 from textual.strip import Strip
 from pathlib import Path
+from textual import events
 import requests
 import time
 import json
@@ -100,7 +101,7 @@ class HomeScreen(Screen):
         yield Container(Button("Logout", id="logout"), id="top-container")
         yield Input(placeholder="Search user", id="search-user-input")
         yield ScrollableContainer(*self.all_usernames_widget, id='user-list-container')
-        
+    
     
     def logout(self):
         os.remove(f"{Path.home()}/toschat_cred.json")
