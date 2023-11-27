@@ -55,7 +55,7 @@ class HomeScreen(Screen):
         self.list_view.clear()
         
         for user in self.all_users:
-            self.list_view.append(ListItem(UserWidget(user["username"], classes="list-item")))
+            self.list_view.append(ListItem(UserWidget(user["username"]), classes="list-item"))
 
     def search_users(self, text: str) -> None:
         if text.strip() != "":
@@ -67,7 +67,7 @@ class HomeScreen(Screen):
             self.list_view.clear()
 
             for user in users:
-                self.list_view.append(ListItem(UserWidget(user, classes="list-item")))
+                self.list_view.append(ListItem(UserWidget(user), classes="list-item"))
         else:
             self.get_all_users()
 
