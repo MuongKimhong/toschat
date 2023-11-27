@@ -212,6 +212,27 @@ class HomeScreen(Screen):
         else:
             self.get_all_users()
 
+    def start_message(self, username: str) -> None:
+        url = f"{SERVER_BASE_URL}api-chats/start-message-user/" 
+        data = {"other_username": username}
+        headers = {"Authorization": f"Bearer {self.credential['access_token']}"}
+        response = requests.post(url, data=data, headers=headers)
+        response = json.loads(response.text)
+
+        path = f"{Path.home()}/toschat_cred.json" 
+        self.credential["selected_chatroom_id"] = response["chatroom_id"]
+        self.credential["selected_username_to_message"] = username
+
+        with open(path, "w") as cred_file:
+            cred_file.write(json.dumps(self.credential, indent=4))
+
+        # redirect to chatscreen
+        if "chat" not in self.app._installed_screens:
+            from ..chat_screen.chat import ChatScreen
+            self.app.install_screen(ChatScreen, "chat")
+
+        self.app.switch_screen("chat")
+
     def clear_data(self) -> None:
         self.all_users.clear()
         self.list_view.clear()
@@ -227,6 +248,8 @@ class HomeScreen(Screen):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "logout":
             self.logout()
+        else:
+            self.start_message(username=event.button.id)
     
     def on_input_changed(self, event: Input.Changed) -> None:
         if event.input.id == "search-user-input":
