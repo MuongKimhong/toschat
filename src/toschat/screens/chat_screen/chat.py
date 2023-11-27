@@ -125,7 +125,6 @@ class ChatScreen(Screen):
                 self.post_message(Receive(event[1]))
 
     def on_screen_resume(self, event: events.ScreenResume) -> None:
-
         # update username on navbar based on cred_file
         with open(f"{Path.home()}/toschat_cred.json", "r") as cred_file:
             self.credential = json.load(cred_file)
