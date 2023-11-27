@@ -187,15 +187,30 @@ class HomeScreen(Screen):
         os.remove(f"{Path.home()}/toschat_cred.json")
         self.app.switch_screen("signin")
 
-    def get_all_users(self):
+    def get_all_users(self) -> None:
         url = f"{SERVER_BASE_URL}api-users/list-all-users/"
         params = {"current_user_id": self.credential["user"]["id"]}
         headers = {"Authorization": f"Bearer {self.credential['access_token']}"}
         response = requests.get(url, params=params, headers=headers)
         self.all_users = json.loads(response.text)["users"]
+        self.list_view.clear()
         
         for user in self.all_users:
             self.list_view.append(ListItem(UserWidget(user["username"], classes="list-item")))
+
+    def search_users(self, text: str) -> None:
+        if text.strip() != "":
+            url = f"{SERVER_BASE_URL}api-users/search-users/"
+            params = {"current_user_id": self.credential["user"]["id"], "search_text": text}
+            headers = {"Authorization": f"Bearer {self.credential['access_token']}"}
+            response  = requests.get(url, params=params, headers=headers)
+            users: list = json.loads(response.text)["users"]
+            self.list_view.clear()
+
+            for user in users:
+                self.list_view.append(ListItem(UserWidget(user, classes="list-item")))
+        else:
+            self.get_all_users()
 
     def clear_data(self) -> None:
         self.all_users.clear()
@@ -213,3 +228,6 @@ class HomeScreen(Screen):
         if event.button.id == "logout":
             self.logout()
     
+    def on_input_changed(self, event: Input.Changed) -> None:
+        if event.input.id == "search-user-input":
+            self.search_users(event.input.value)
