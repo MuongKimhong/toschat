@@ -76,20 +76,17 @@ class ChatScreen(Screen):
     credential = None
     list_view = ListView(*[], id="messages-list-view")
     another_username = None
-
     
     def compose(self) -> ComposeResult:
         yield NavbarWidget()
         yield Container(self.list_view, id="messages-container")
         yield Input(placeholder="Write message here", id="message-input")
 
-
     def clear_data(self):
         self.websocket = None
         self.credential = None
         self.list_view.clear()
         self.another_username = None
-
     
     def get_messages_in_chatroom(self):
         url = f"{SERVER_BASE_URL}api-chats/get-messages/"
@@ -106,7 +103,6 @@ class ChatScreen(Screen):
             self.list_view.append(ListItem(message_widget, classes="list-item"))
 
         self.list_view.scroll_end()
-
     
     def send_message(self, text: str):
         url = f"{SERVER_BASE_URL}api-chats/send-message/"
@@ -120,15 +116,13 @@ class ChatScreen(Screen):
         response = requests.post(url, data=data, headers=headers)
         message: dict = json.loads(response.text)["message"]
         self.websocket.emit("send message", message)
-
     
-    @work(exclusive=True, thread=True)
+    @work(exclusive=True, thread=True, group="websocket")
     def websocket_receive(self):
         while True:
             event = self.websocket.receive()
             if event[0] == "newmessage":
                 self.post_message(Receive(event[1]))
-
 
     def on_screen_resume(self, event: events.ScreenResume) -> None:
 
@@ -137,14 +131,6 @@ class ChatScreen(Screen):
             self.credential = json.load(cred_file)
             self.another_username = self.credential["selected_username_to_message"]
             self.query_one("#another-username").update(self.another_username)
-
-        # cancel worker
-        try:
-            current_worker = get_current_worker()
-            if current_worker.is_running:
-                current_worker.cancel()
-        except NoActiveWorker:
-            pass
 
         # connect websocket
         self.websocket = socketio.SimpleClient()
@@ -156,22 +142,15 @@ class ChatScreen(Screen):
         # listen to websocket event
         self.websocket_receive()
 
-
     def on_screen_suspend(self, event: events.ScreenSuspend) -> None:
         # disconnect websocket
         self.websocket.disconnect()
-        
-        # cancel worker
-        try:
-            current_worker = get_current_worker()
-            if current_worker.is_running:
-                current_worker.cancel()
-        except NoActiveWorker:
-            pass
 
+        # cancel worker
+        self.workers.cancel_group(self, "websocket")
+        
         # clear data
         self.clear_data()
-
     
     def on_receive(self, message: Receive) -> None:
         message_receiver = message.new_message["receiver"]["username"]
@@ -183,7 +162,6 @@ class ChatScreen(Screen):
             self.list_view.append(
                 ListItem(message_widget, classes="list-item")
             )
-
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if event.input.id == "message-input":
