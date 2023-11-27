@@ -24,9 +24,6 @@ class SignUpScreen(Screen):
     CSS_PATH = "signup.tcss"
 
     def compose(self) -> ComposeResult:
-        if "signin" in self.app._installed_screens:
-            self.app.uninstall_screen("signin")
-
         yield Header()
         yield Static("Create new account", classes="create-new-acc-text")
         yield Static("", id="error-text")
