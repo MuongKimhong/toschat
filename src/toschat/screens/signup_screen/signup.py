@@ -75,3 +75,11 @@ class SignUpScreen(Screen):
                     self.display_error(response["message"])
                 else:
                     self.redirect_signin() 
+
+    def on_screen_resume(self, event: events.ScreenResume) -> None:
+        self.query_one("#error-text").styles.visibility = "hidden"
+
+    def on_screen_suspend(self, event: events.ScreenSuspend) -> None:
+        self.query_one("#username-input").clear()
+        self.query_one("#password-input").clear()
+        self.query_one("#confirm-password-input").clear()
