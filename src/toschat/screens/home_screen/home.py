@@ -179,6 +179,14 @@ class HomeScreen(Screen):
         with open(self.credential_file_path, "r") as cred_file:
             self.credential = json.load(cred_file)
 
+    def logout(self): 
+        if "signin" not in self.app._installed_screens:
+            from ..signin_screen.signin import SignInScreen
+            self.app.install_screen(SignInScreen, "signin")
+
+        os.remove(f"{Path.home()}/toschat_cred.json")
+        self.app.switch_screen("signin")
+
     def get_all_users(self):
         url = f"{SERVER_BASE_URL}api-users/list-all-users/"
         params = {"current_user_id": self.credential["user"]["id"]}
@@ -187,7 +195,7 @@ class HomeScreen(Screen):
         self.all_users = json.loads(response.text)["users"]
         
         for user in self.all_users:
-            self.list_view.append(UserWidget(user["username"]))
+            self.list_view.append(ListItem(UserWidget(user["username"], classes="list-item")))
 
     def clear_data(self) -> None:
         self.all_users.clear()
@@ -200,4 +208,8 @@ class HomeScreen(Screen):
 
     def on_screen_suspend(self, event: events.ScreenSuspend) -> None:
         self.clear_data()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "logout":
+            self.logout()
     
