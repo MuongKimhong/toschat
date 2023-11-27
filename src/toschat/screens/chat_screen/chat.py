@@ -78,6 +78,7 @@ class ChatScreen(Screen):
     another_username = None
     
     def compose(self) -> ComposeResult:
+        yield Header()
         yield NavbarWidget()
         yield Container(self.list_view, id="messages-container")
         yield Input(placeholder="Write message here", id="message-input")
@@ -146,7 +147,7 @@ class ChatScreen(Screen):
         self.websocket.disconnect()
 
         # cancel worker
-        self.workers.cancel_group(self, "websocket")
+        self.app.workers.cancel_group(self, "websocket")
         
         # clear data
         self.clear_data()

@@ -30,6 +30,7 @@ class HomeScreen(Screen):
     credential_file_path = f"{Path.home()}/toschat_cred.json"
 
     def compose(self) -> ComposeResult:
+        yield Header()
         yield Container(Button("Logout", id="logout"), id="top-container")
         yield Input(placeholder="Search user", id="search-user-input")
         yield Container(self.list_view, id='user-list-container')
