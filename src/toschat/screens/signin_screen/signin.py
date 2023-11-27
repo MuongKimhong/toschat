@@ -2,6 +2,7 @@ from textual.widgets import Static, Header, Input, Button
 from textual.containers import Container, Horizontal, Vertical
 from textual.app import ComposeResult
 from textual.screen import Screen
+from textual import events
 from pathlib import Path
 import requests
 import time
@@ -26,15 +27,6 @@ class SignInScreen(Screen):
     CSS_PATH = "signin.tcss"
 
     def compose(self) -> ComposeResult:
-        if "chat" in self.app._installed_screens:
-            self.app.uninstall_screen("chat")
-        
-        if "signup" in self.app._installed_screens:
-            self.app.uninstall_screen("signup")
-
-        if "home" in self.app._installed_screens:
-            self.app.uninstall_screen("home")
-
         yield Header()
         yield Static("Sign In", classes="sign-in-text")
         yield Static("Username or password is incorrect", id="error-text")
@@ -107,3 +99,11 @@ class SignInScreen(Screen):
                 else:
                     self.create_credential_file(response["credential"])
                     self.redirect_home()
+
+    def on_screen_resume(self, event: events.ScreenResume) -> None:
+        self.query_one("#error-text").styles.visibility = "hidden"
+
+    def on_screen_suspend(self, event: events.ScreenSuspend) -> None:
+        self.query_one("#error-text").styles.visibility = "hidden"
+        self.query_one("#username-input").clear()
+        self.query_one("#password-input").clear()

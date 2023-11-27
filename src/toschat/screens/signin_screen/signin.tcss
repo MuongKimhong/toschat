@@ -10,7 +10,6 @@ SignInScreen {
 #error-text{
     content-align: center middle;
     color: red;
-    visibility: hidden;
     margin-top: 1;
 }
 
