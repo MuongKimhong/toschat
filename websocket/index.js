@@ -15,10 +15,7 @@ server.listen(devPort, () => {
 })
 
 socketIO.on("connection", (socket) => {
-    console.log(socket.id);
-
     socket.on("send message", (message) => {
-        console.log(message);
         socket.broadcast.emit("newmessage", message);
         socket.emit("newmessage", message);
     })
