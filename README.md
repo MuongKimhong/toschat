@@ -13,5 +13,3 @@ $ cd toschat
 $ sudo chmod +x run.sh
 $ ./run.sh
 ```
-
-Let make it a btter one & Happy coding!
