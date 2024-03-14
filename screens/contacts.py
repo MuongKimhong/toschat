@@ -6,7 +6,6 @@ from textual.screen import Screen
 from textual import events, log
 
 from components.contact_list_item import ContactListItem
-
 from styles.css import (
     CONTACT_SCREEN_STYLES,
     CONTACT_LIST_CONTAINER_STYLES,
@@ -14,7 +13,7 @@ from styles.css import (
 )
 
 
-class UpperContainer(Container):
+class ContactListUpperContainer(Container):
     DEFAULT_CSS = CONTACT_SCREEN_UPPER_CONTAINER_STYLES
 
     def compose(self) -> ComposeResult:
@@ -38,5 +37,5 @@ class ContactScreen(Screen, can_focus=True):
     DEFAULT_CSS = CONTACT_SCREEN_STYLES
 
     def compose(self) -> ComposeResult:
-        yield UpperContainer()
+        yield ContactListUpperContainer()
         yield ContactListContainer()

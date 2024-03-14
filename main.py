@@ -5,6 +5,7 @@ from screens.sign_in import SignInScreen
 
 # import screens to test
 from screens.contacts import ContactScreen
+from screens.new_contact import NewContactScreen
 
 
 class Main(App):
