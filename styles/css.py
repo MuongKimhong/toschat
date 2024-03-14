@@ -29,3 +29,72 @@ SIGN_UP_SCREEN_STYLES = '''
         content-align: center middle;
     }
 '''
+
+CONTACT_SCREEN_STYLES = '''
+    ContactScreen {
+        background: rgb(18, 18, 18);
+        color: white;
+        padding: 1 2;
+    }
+'''
+
+CONTACT_SCREEN_UPPER_CONTAINER_STYLES = '''
+UpperContainer {
+    align: center top;
+    layout: grid;
+    grid-size: 2;
+    grid-columns: 3fr 1fr;
+    height: 3;
+}
+'''
+
+CONTACT_LIST_CONTAINER_STYLES= '''
+    ContactListContainer {
+        margin-top: 2;
+        padding-left: 2;
+        padding-right: 2;
+    }
+    ListView {
+        background: rgb(18, 18, 18);
+    }
+'''
+
+CONTACT_STYLES = '''
+    Contact {
+        align: center middle;
+        layout: grid;
+        grid-size: 2;
+        grid-columns: 3fr 1fr;
+        height: 3;
+        border: round grey;
+        border-left: hidden grey;
+        border-right: hidden grey;
+        border-top: hidden grey;
+    }
+    .username {
+        text-style: bold;
+    }
+    .arrow {
+        text-style: bold;
+        content-align: right middle;
+    }
+'''
+
+CONTACT_LIST_ITEM_STYLES = '''
+    ContactListItem {
+        height: 3;
+        padding-top: 1;
+        padding-left: 2;
+        padding-right: 2;
+        background: rgb(18, 18, 18);
+        overflow: hidden hidden;
+    }
+'''
+
+NEW_CONTACT_SCREEN_STYLES = '''
+    NewContactScreen {
+        background: rgb(18, 18, 18);
+        color: white;
+        padding: 1 2;
+    }
+'''
