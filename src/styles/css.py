@@ -159,3 +159,12 @@ NEW_CONTACT_SCREEN_UPPER_CONTAINER_STYLES = '''
         height: 3;
     }
 '''
+
+
+CHAT_SCREEN_STYLES = '''
+    ChatScreen {
+        background: rgb(18, 18, 18);
+        color: white;
+        padding: 1 2;
+    }
+'''

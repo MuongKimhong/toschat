@@ -4,8 +4,7 @@ from textual import events, log
 from screens.sign_in import SignInScreen
 
 # import screens to test
-from screens.contacts import ContactScreen
-from screens.new_contact import NewContactScreen
+from screens.chat import ChatScreen
 
 
 class Main(App):
@@ -13,7 +12,7 @@ class Main(App):
         super().__init__()
 
     def on_mount(self, event: events.Mount) -> None:
-        self.push_screen(ContactScreen())
+        self.push_screen(ChatScreen())
 
 
 if __name__ == "__main__":
