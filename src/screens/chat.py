@@ -14,6 +14,36 @@ from styles.css import CHAT_SCREEN_STYLES, MESSAGES_CONTAINER_STYLES
 import api_requests
 
 
+class ChatScreenUpperContainer(Container):
+    DEFAULT_CSS = '''
+        ChatScreenUpperContainer {
+            align: center top;
+            layout: grid;
+            grid-size: 2;
+            grid-columns: 3fr 3fr;
+            height: 1;
+        }
+        #go-back-btn {
+            border: none;
+            height: 1;
+        }
+        #logout {
+            border: none;
+            height: 1;
+            content-align: right middle;
+        }
+    '''
+
+    def compose(self) -> ComposeResult:
+        yield Button("< Back", variant="default", id="go-back-btn")
+        yield Button("Logout", variant="default", id="logout")
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "go-back-btn":
+            from screens.contacts import ContactScreen
+            self.app.switch_screen(ContactScreen())
+
+
 class MessagesContainer(Container, can_focus=True):
     DEFAULT_CSS = MESSAGES_CONTAINER_STYLES
 
@@ -31,7 +61,7 @@ class ChatScreen(Screen):
     messages_list_view = ListView(*[], id="messages-list-view")
 
     def compose(self) -> ComposeResult:
-        yield Button("< Back", id="back-btn")
+        yield ChatScreenUpperContainer()
         yield MessagesContainer(messages_list_view=self.messages_list_view)
         yield WriteMessageInput(placeholder="Write message")
 

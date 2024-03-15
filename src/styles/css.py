@@ -42,9 +42,15 @@ CONTACT_SCREEN_UPPER_CONTAINER_STYLES = '''
 ContactListUpperContainer {
     align: center top;
     layout: grid;
-    grid-size: 2;
-    grid-columns: 3fr 1fr;
+    grid-size: 3;
+    grid-columns: 3fr 1fr 1fr;
     height: 3;
+}
+#new-contact {
+    margin-left: 2;
+}
+#logout {
+    margin-right: 1;
 }
 '''
 
@@ -154,9 +160,15 @@ NEW_CONTACT_SCREEN_UPPER_CONTAINER_STYLES = '''
     SearchResultUpperContainer {
         align: center top;
         layout: grid;
-        grid-size: 2;
-        grid-columns: 3fr 1fr;
+        grid-size: 3;
+        grid-columns: 3fr 1fr 1fr;
         height: 3;
+    }
+    #go-back-btn {
+        margin-left: 2;
+    }
+    #logout {
+        margin-right: 1;
     }
 '''
 

@@ -18,11 +18,13 @@ class ContactListUpperContainer(Container):
 
     def compose(self) -> ComposeResult:
         yield Input(placeholder="Search contacts")
-        yield Button("New", variant="default")
+        yield Button("New", variant="default", id="new-contact")
+        yield Button("Logout", variant="default", id="logout")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        from screens.new_contact import NewContactScreen
-        self.app.switch_screen(NewContactScreen())
+        if event.button.id == "new-contact":
+            from screens.new_contact import NewContactScreen
+            self.app.switch_screen(NewContactScreen())
 
 
 class ContactListContainer(Container):

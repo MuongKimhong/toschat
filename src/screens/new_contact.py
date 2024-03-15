@@ -17,11 +17,13 @@ class SearchResultUpperContainer(Container):
 
     def compose(self) -> ComposeResult:
         yield Input(placeholder="Enter contact name to search")
-        yield Button("< Back", variant="default")
+        yield Button("< Back", variant="default", id="go-back-btn")
+        yield Button("Logout", variant="default", id="logout")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        from screens.contacts import ContactScreen
-        self.app.switch_screen(ContactScreen())
+        if event.button.id == "go-back-btn":
+            from screens.contacts import ContactScreen
+            self.app.switch_screen(ContactScreen())
 
 
 class SearchResultContainer(Container):
