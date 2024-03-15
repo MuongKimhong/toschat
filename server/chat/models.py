@@ -7,7 +7,7 @@ from account.models import User, UserContact
 
 class ChatRoom(models.Model):
     members = models.ManyToManyField(User)
-    created_date = models.DateTimeField(auto_now_ad=True)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def serialize(self) -> Dict[str, Union[str, list[Dict[str, str]]]]:
         return {
@@ -20,7 +20,7 @@ class Message(models.Model):
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
-    created_date = models.DateTimeField(auto_now_ad=True)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def serialize(self):
         return {

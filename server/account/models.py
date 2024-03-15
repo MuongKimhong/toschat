@@ -18,7 +18,7 @@ class User(AbstractUser):
 class UserContact(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     contact = models.ForeignKey(User, related_name="contact", on_delete=models.CASCADE)
-    created_date = models.DateTimeField(auto_now_ad=True)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def serialize(self) -> Dict[str, Dict[str, str]]:
         return {
