@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from account.models import User, UserContact
+from chat.models import Chats
 
 
 def get_token(user) -> dict:
