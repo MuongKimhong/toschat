@@ -167,4 +167,11 @@ CHAT_SCREEN_STYLES = '''
         color: white;
         padding: 1 2;
     }
+    #back-btn {
+        border: none;
+        height: 1;
+    }
+    #write-message-input {
+        border: tall grey;
+    }
 '''

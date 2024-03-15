@@ -31,3 +31,7 @@ class ContactListItem(ListItem):
 
     def watch_highlighted(self, value: bool) -> None:
         pass
+
+    def on_click(self, event: events.Click) -> None:
+        from screens.chat import ChatScreen
+        self.app.switch_screen(ChatScreen()) 
