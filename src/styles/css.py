@@ -175,3 +175,15 @@ CHAT_SCREEN_STYLES = '''
         border: tall grey;
     }
 '''
+
+MESSAGES_CONTAINER_STYLES = '''
+    MessagesContainer {
+        padding: 1 1;
+        border: round grey;
+        border-top: hidden grey;
+        border-left: hidden grey;
+        border-right: hidden grey;
+        color: white;
+        height: 90%;
+    }
+'''
