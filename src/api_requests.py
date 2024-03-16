@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Dict
 import requests
 
 
@@ -51,13 +51,13 @@ class ApiRequests:
         res = requests.post(url, data=data, headers={"Authorization": f"Bearer {access_token}"})
         return {"status_code": res.status_code, "data": res.json()}
 
-    def search_contacts_request(self, search_text: str, access_token: str):
-        url = f"{self.base_url}/api-account/search-contact/"
+    def search_contacts_request(self, search_text: str | None, access_token: str):
+        url = f"{self.base_url}/api-account/search-contacts/"
         params = {"search_text": search_text}
         res = requests.get(url, params=params, headers={"Authorization": f"Bearer {access_token}"})
         return {"status_code": res.status_code, "data": res.json()} 
 
-    def search_users_by_username_request(self, search_text: str, access_token: str):
+    def search_users_by_username_request(self, search_text: str | None, access_token: str):
         url = f"{self.base_url}/api-account/search-users-by-username/"
         params = {"search_text": search_text}
         res = requests.get(url, params=params, headers={"Authorization": f"Bearer {access_token}"})
@@ -65,12 +65,12 @@ class ApiRequests:
 
     def get_messages_request(self, chatroom_id: int, access_token: str):
         url = f"{self.base_url}/api-chat/get-messages/"
-        params = {"chatroom_id": chatroom__id}
+        params = {"chatroom_id": chatroom_id}
         res = requests.get(url, params=params, headers={"Authorization": f"Bearer {access_token}"})
         return {"status_code": res.status_code, "data": res.json()} 
 
     def send_message_request(self, chatroom_id: int, text: str, access_token: str):
         url = f"{self.base_url}/api-chat/send-message/"
         data = {"chatroom_id": chatroom_id, "text": text}
-        res = requests.get(url, data=data, headers={"Authorization": f"Bearer {access_token}"})
+        res = requests.post(url, data=data, headers={"Authorization": f"Bearer {access_token}"})
         return {"status_code": res.status_code, "data": res.json()}  

@@ -80,10 +80,13 @@ class AddNewContact(APIView):
         except User.DoesNotExist:
             return Response({"contact_not_exist": True}, status=400)
         
-        # create new contact for current user
-        new_contact = self.create_contact(user_id=request.user.id, contact_id=contact.id)
-        # create new contact for another user
-        self.create_contact(user_id=contact.id, contact_id=request.user.id)
+        try:
+            user_contact = UserContact.objects.get(user__id=request.user.id, contact__id=contact.id)
+        except UserContact.DoesNotExist:
+            # create new contact for current user
+            new_contact = self.create_contact(user_id=request.user.id, contact_id=contact.id)
+            # create new contact for another user
+            self.create_contact(user_id=contact.id, contact_id=request.user.id)
 
         # create new chatroom for both user
         if not ChatRoom.objects.filter(members__in=[request.user, contact]).exists():
@@ -98,6 +101,9 @@ class SearchUsersByUsername(APIView):
 
     def get(self, request):
         search_text = request.query_params.get("search_text")
+        if search_text is None:
+            return Response({"param_missing": True}, status=400)
+
         search_results = User.objects.filter(username__icontains=search_text).exclude(id=request.user.id)
         search_results = [user.serialize() for user in search_results]
         return Response({"results": search_results}, status=200)
@@ -106,8 +112,11 @@ class SearchUsersByUsername(APIView):
 class SearchContacts(APIView):
     permission_classes = [ IsAuthenticated ]
 
-    def get(self, request):
+    def get(self, request):        
         text = request.query_params.get("search_text")
+        if text is None:
+            return Response({"param_missing": True}, status=400)
+
         results = UserContact.objects.filter(user__id=request.user.id, contact__username__icontains=text) 
         results = [contact.serialize()["contact"] for contact in results]
         return Response({"results": results}, status=200)
