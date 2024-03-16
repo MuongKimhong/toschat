@@ -13,6 +13,12 @@ class Main(App):
         self.user: Dict[str, str] = dict()
         super().__init__()
 
+    def logout(self) -> None:
+        self.access_token = None
+        self.current_chatroom_id = None
+        self.user = None
+        self.switch_screen(SignInScreen())
+
     def on_mount(self, event: events.Mount) -> None:
         # default screen
         self.push_screen(SignInScreen())

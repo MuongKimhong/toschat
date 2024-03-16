@@ -25,6 +25,9 @@ class ContactListUpperContainer(Container):
         if event.button.id == "new-contact":
             from screens.new_contact import NewContactScreen
             self.app.switch_screen(NewContactScreen())
+        
+        elif event.button.id == "logout":
+            self.app.logout()
 
 
 class ContactListContainer(Container):

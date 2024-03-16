@@ -24,6 +24,9 @@ class SearchResultUpperContainer(Container):
         if event.button.id == "go-back-btn":
             from screens.contacts import ContactScreen
             self.app.switch_screen(ContactScreen())
+        
+        elif event.button.id == "logout":
+            self.app.logout()
 
 
 class SearchResultContainer(Container):
