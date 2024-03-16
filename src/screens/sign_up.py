@@ -20,7 +20,7 @@ class SignUpScreen(Screen):
 
     def compose(self) -> ComposeResult:
         yield Static("Create New Account", id="create-new-account-txt")
-        yield ErrorMessage("Username is already taken", id="signup-error-message")
+        yield ErrorMessage("", id="signup-error-message")
         yield UsernameInput(
             placeholder="Enter username", 
             max_length=25,
