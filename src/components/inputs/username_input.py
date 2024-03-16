@@ -13,3 +13,8 @@ class UsernameInput(Input, can_focus=True):
 
     def on_mount(self, event: events.Mount) -> None:
         pass
+
+    def on_key(self, event: events.Key) -> None:
+        if event.key == "space":
+            event.prevent_default()
+        
