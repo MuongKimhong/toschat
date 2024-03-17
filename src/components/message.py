@@ -3,6 +3,7 @@ from typing import Dict
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Static
+from textual import log
 
 
 class Message(Container):
@@ -21,12 +22,13 @@ class Message(Container):
     }
     '''
 
-    def __init__(self, message: Dict[str, Dict[str, str]]) -> None:
+    def __init__(self, message) -> None:
         self.message = message
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        if self.message["sender"]["id"] == "2":
+        log(self.message)
+        if self.message["sender"]["id"] == self.app.user["id"]:
             text = self.message["message"]["text"] 
             classes = "right-message"
         else:

@@ -22,8 +22,9 @@ class Contact(Container):
 class ContactListItem(ListItem):
     DEFAULT_CSS = CONTACT_LIST_ITEM_STYLES
 
-    def __init__(self, username: str) -> None:
+    def __init__(self, username: str, chatroom_id: int) -> None:
         self.username = username
+        self.chatroom_id = chatroom_id
         super().__init__()
 
     def compose(self) -> ComposeResult:
@@ -34,4 +35,5 @@ class ContactListItem(ListItem):
 
     def on_click(self, event: events.Click) -> None:
         from screens.chat import ChatScreen
+        self.app.current_chatroom_id = self.chatroom_id
         self.app.switch_screen(ChatScreen()) 

@@ -39,7 +39,7 @@ class ContactListUpperContainer(Container):
 
             for contact in res["data"]["contacts"]:
                 contacts_list_view.append(
-                    ContactListItem(contact["username"])
+                    ContactListItem(contact["username"], contact["chatroom_id"])
                 )        
         else:
             res = ApiRequests().search_contacts_request(
@@ -48,7 +48,7 @@ class ContactListUpperContainer(Container):
             )
             for result in res["data"]["results"]:
                 contacts_list_view.append(
-                    ContactListItem(result["username"])
+                    ContactListItem(result["username"], result["chatroom_id"])
                 )
 
 
@@ -82,5 +82,5 @@ class ContactScreen(Screen, can_focus=True):
         if res["status_code"] == 200:
             for contact in res["data"]["contacts"]:
                 self.contacts_list_view.append(
-                    ContactListItem(contact["username"])
+                    ContactListItem(contact["username"], contact["chatroom_id"])
                 )

@@ -8,10 +8,9 @@ from textual import events, log
 
 from components.inputs.write_message_input import WriteMessageInput
 from components.message import Message
-
 from styles.css import CHAT_SCREEN_STYLES, MESSAGES_CONTAINER_STYLES
 
-import api_requests
+from api_requests import ApiRequests
 
 
 class ChatScreenUpperContainer(Container):
@@ -41,6 +40,7 @@ class ChatScreenUpperContainer(Container):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "go-back-btn":
             from screens.contacts import ContactScreen
+            self.app.current_chatroom_id = None
             self.app.switch_screen(ContactScreen())
         
         elif event.button.id == "logout":
@@ -69,17 +69,17 @@ class ChatScreen(Screen):
         yield WriteMessageInput(placeholder="Write message")
 
     def on_screen_resume(self, event: events.ScreenResume) -> None:
-        messages: list[Dict[str, Dict[str, str]]] = api_requests.get_messages()
+        self.messages_list_view.clear()
 
-        for message in messages:
-            self.messages_list_view.append(ListItem(Message(message)))
+        res = ApiRequests().get_messages_request(
+            chatroom_id=self.app.current_chatroom_id,
+            access_token=self.app.access_token
+        )
+        if res["status_code"] == 200:
+            for message in res["data"]["messages"]:
+                self.messages_list_view.append(ListItem(Message(message)))
 
         self.messages_list_view.scroll_end()
-        
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "back-btn":
-            from screens.contacts import ContactScreen
-            self.app.switch_screen(ContactScreen()) 
 
     def on_mount(self, event: events.Mount) -> None:
         pass

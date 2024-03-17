@@ -18,9 +18,6 @@ class GetMessages(APIView):
             print("error here")
             return Response({"chatroom_not_exist": True}, status=400)
 
-        print(request.user)
-        print(chatroom.members.all())
-
         if request.user not in chatroom.members.all():
             return Response({"user_not_in_room": True}, status=400)
 

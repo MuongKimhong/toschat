@@ -2,7 +2,7 @@ from typing import Dict, Union
 
 from django.db import models
 
-from account.models import User, UserContact
+from account.models import User
 
 
 class ChatRoom(models.Model):
@@ -11,7 +11,7 @@ class ChatRoom(models.Model):
 
     def serialize(self) -> Dict[str, Union[str, list[Dict[str, str]]]]:
         return {
-            "id": str(self.id),
+            "id": self.id,
             "members": [member.serialize() for member in self.members.all()]
         }
 
@@ -25,5 +25,5 @@ class Message(models.Model):
     def serialize(self):
         return {
             "sender": self.sender.serialize(),
-            "message": {"id": str(self.id), "text": self.text}
+            "message": {"id": self.id, "text": self.text}
         }
