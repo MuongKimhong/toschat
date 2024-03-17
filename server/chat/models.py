@@ -2,14 +2,12 @@ from typing import Dict, Union
 
 from django.db import models
 
-from account.models import User
-
 
 class ChatRoom(models.Model):
-    members = models.ManyToManyField(User)
+    members = models.ManyToManyField("account.User")
     created_date = models.DateTimeField(auto_now_add=True)
 
-    def serialize(self) -> Dict[str, Union[str, list[Dict[str, str]]]]:
+    def serialize(self):
         return {
             "id": self.id,
             "members": [member.serialize() for member in self.members.all()]
@@ -18,7 +16,7 @@ class ChatRoom(models.Model):
 
 class Message(models.Model):
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    sender = models.ForeignKey("account.User", on_delete=models.CASCADE)
     text = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
 

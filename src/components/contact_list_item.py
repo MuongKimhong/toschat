@@ -10,12 +10,13 @@ from styles.css import CONTACT_STYLES, CONTACT_LIST_ITEM_STYLES
 class Contact(Container):
     DEFAULT_CSS = CONTACT_STYLES
 
-    def __init__(self, username: str) -> None:
+    def __init__(self, username: str, room) -> None:
         self.username = username
+        self.room = room
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield Static(self.username, classes="username")
+        yield Static(f"{self.username} - room {self.room}", classes="username")
         yield Static(">>", classes="arrow")
 
 
@@ -28,7 +29,7 @@ class ContactListItem(ListItem):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield Contact(username=self.username)
+        yield Contact(username=self.username, room=self.chatroom_id)
 
     def watch_highlighted(self, value: bool) -> None:
         pass
@@ -36,4 +37,5 @@ class ContactListItem(ListItem):
     def on_click(self, event: events.Click) -> None:
         from screens.chat import ChatScreen
         self.app.current_chatroom_id = self.chatroom_id
+        log(f"contact click and room id is {self.chatroom_id}")
         self.app.switch_screen(ChatScreen()) 

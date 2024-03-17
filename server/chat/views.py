@@ -15,13 +15,12 @@ class GetMessages(APIView):
         try:
             chatroom = ChatRoom.objects.get(id=data["chatroom_id"])
         except ChatRoom.DoesNotExist:
-            print("error here")
             return Response({"chatroom_not_exist": True}, status=400)
 
         if request.user not in chatroom.members.all():
             return Response({"user_not_in_room": True}, status=400)
 
-        messages = Message.objects.filter(chatroom__id=chatroom.id).order_by("-id")
+        messages = Message.objects.filter(chatroom__id=chatroom.id)
         messages = [message.serialize() for message in messages]
         return Response({"messages": messages}, status=200)
 

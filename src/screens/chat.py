@@ -40,7 +40,6 @@ class ChatScreenUpperContainer(Container):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "go-back-btn":
             from screens.contacts import ContactScreen
-            self.app.current_chatroom_id = None
             self.app.switch_screen(ContactScreen())
         
         elif event.button.id == "logout":

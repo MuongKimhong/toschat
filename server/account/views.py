@@ -70,8 +70,12 @@ class GetAllContacts(APIView):
 class AddNewContact(APIView):
     permission_classes = [ IsAuthenticated ]
 
-    def create_contact(self, user_id: int, contact_id: int) -> UserContact:
-        new_contact = UserContact.objects.create(user_id=user_id, contact_id=contact_id)
+    def create_contact(self, user_id: int, contact_id: int, room_id: int) -> UserContact:
+        new_contact = UserContact.objects.create(
+            user_id=user_id, 
+            contact_id=contact_id,
+            chatroom_id=room_id
+        )
         return new_contact
 
     def post(self, request):
@@ -80,19 +84,31 @@ class AddNewContact(APIView):
         except User.DoesNotExist:
             return Response({"contact_not_exist": True}, status=400)
         
+        # create new chatroom for both user
+        can_create_new_room = True
+        for room in ChatRoom.objects.filter(members=request.user):
+            if contact in room.members.all():
+                can_create_new_room = False
+
+        if can_create_new_room:
+            new_chatroom = ChatRoom.objects.create()
+            new_chatroom.members.add(request.user, contact)
+        
         try:
             user_contact = UserContact.objects.get(user__id=request.user.id, contact__id=contact.id)
         except UserContact.DoesNotExist:
             # create new contact for current user
-            new_contact = self.create_contact(user_id=request.user.id, contact_id=contact.id)
+            new_contact_current_user = self.create_contact(
+                user_id=request.user.id, 
+                contact_id=contact.id,
+                room_id=new_chatroom.id
+            )
             # create new contact for another user
-            self.create_contact(user_id=contact.id, contact_id=request.user.id)
-
-        # create new chatroom for both user
-        if not ChatRoom.objects.filter(members__in=[request.user, contact]).exists():
-            chatroom = ChatRoom.objects.create()
-            chatroom.members.add(request.user, contact)
-
+            new_contact_another_user = self.create_contact(
+                user_id=contact.id, 
+                contact_id=request.user.id,
+                room_id=new_chatroom.id
+            )
         return Response({"success": True}, status=200)
 
 

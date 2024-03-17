@@ -2,6 +2,7 @@ from textual.widgets import Input, ListItem
 from textual import events, log
 
 from components.message import Message
+from api_requests import ApiRequests
 
 
 class WriteMessageInput(Input, can_focus=True):
@@ -26,13 +27,13 @@ class WriteMessageInput(Input, can_focus=True):
         message = event.value.strip()
 
         if message != "":
-            self.app.query_one("ChatScreen").messages_list_view.append(
-                ListItem(Message(
-                    {
-                        "sender": {"username": "current", "id": "2"},
-                        "message": {"id": "4", "text": message}
-                    }
-                ))
-                
+            res = ApiRequests().send_message_request(
+                chatroom_id=self.app.current_chatroom_id,
+                text=message,
+                access_token=self.app.access_token
             )
+            if res["status_code"] == 200:
+                self.app.query_one("#messages-list-view").append(
+                    ListItem(Message(res["data"]["new_message"])) 
+                )
             self.value = ""
