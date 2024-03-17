@@ -104,9 +104,19 @@ class SearchUsersByUsername(APIView):
         if search_text is None:
             return Response({"param_missing": True}, status=400)
 
+        results = []
         search_results = User.objects.filter(username__icontains=search_text).exclude(id=request.user.id)
-        search_results = [user.serialize() for user in search_results]
-        return Response({"results": search_results}, status=200)
+        for result in search_results:
+            user_result = result.serialize()
+            try:
+                UserContact.objects.get(user__id=request.user.id, contact__id=result.id)
+                user_result["added"] = True
+            except UserContact.DoesNotExist:
+                user_result["added"] = False
+
+            results.append(user_result)
+
+        return Response({"results": results}, status=200)
 
 
 class SearchContacts(APIView):

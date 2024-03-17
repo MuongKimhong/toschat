@@ -41,7 +41,7 @@ class SearchResultUpperContainer(Container):
             )
             if response["status_code"] == 200:
                 for result in response["data"]["results"]:
-                    results_list_view.append(ResultListItem(result["username"]))
+                    results_list_view.append(ResultListItem(result["username"], result["added"]))
 
 
 class SearchResultContainer(Container):
