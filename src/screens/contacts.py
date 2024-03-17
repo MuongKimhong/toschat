@@ -34,24 +34,32 @@ class ContactListUpperContainer(Container):
 class ContactListContainer(Container):
     DEFAULT_CSS = CONTACT_LIST_CONTAINER_STYLES
 
-    def __init__(self, contacts: list) -> None:
-        self.contacts = contacts
+    def __init__(self, contacts_list_view: ListView) -> None:
+        self.contacts_list_view = contacts_list_view
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        contact_lists = [ContactListItem(contact["username"]) for contact in self.contacts]
-        yield ListView(*contact_lists)
+        yield self.contacts_list_view
 
 
 class ContactScreen(Screen, can_focus=True):
     DEFAULT_CSS = CONTACT_SCREEN_STYLES
     contacts = list()
 
+    def __init__(self) -> None:
+        self.contacts_list_view = ListView(*[], id="contacts-list-view")
+        super().__init__()
+
     def compose(self) -> ComposeResult:
         yield ContactListUpperContainer()
+        yield ContactListContainer(contacts_list_view=self.contacts_list_view)
 
+    def on_screen_resume(self, event: events.ScreenResume) -> None:
+        self.contacts_list_view.clear()
         res = ApiRequests().get_all_contacts_request(self.app.access_token)
 
         if res["status_code"] == 200:
-            self.contacts = res["data"]["contacts"]
-            yield ContactListContainer(contacts=self.contacts)
+            for contact in res["data"]["contacts"]:
+                self.contacts_list_view.append(
+                    ContactListItem(contact["username"])
+                )
