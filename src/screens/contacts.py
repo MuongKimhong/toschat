@@ -30,6 +30,27 @@ class ContactListUpperContainer(Container):
         elif event.button.id == "logout":
             self.app.logout()
 
+    def on_input_changed(self, event: Input.Changed) -> None:
+        contacts_list_view = self.app.query_one("#contacts-list-view")
+        contacts_list_view.clear()
+
+        if event.value.strip() == "":
+            res = ApiRequests().get_all_contacts_request(self.app.access_token)
+
+            for contact in res["data"]["contacts"]:
+                contacts_list_view.append(
+                    ContactListItem(contact["username"])
+                )        
+        else:
+            res = ApiRequests().search_contacts_request(
+                search_text=event.value,
+                access_token=self.app.access_token
+            )
+            for result in res["data"]["results"]:
+                contacts_list_view.append(
+                    ContactListItem(result["username"])
+                )
+
 
 class ContactListContainer(Container):
     DEFAULT_CSS = CONTACT_LIST_CONTAINER_STYLES
