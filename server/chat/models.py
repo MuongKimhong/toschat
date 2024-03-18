@@ -22,5 +22,7 @@ class Message(models.Model):
         return {
             "sender": self.sender.serialize(),
             "message": {"id": self.id, "text": self.text},
-            "chatroom_id": self.chatroom.id
+            "chatroom_id": self.chatroom.id,
+            "time": self.created_date.strftime("%I:%M %p"),
+            "type": "message"
         }

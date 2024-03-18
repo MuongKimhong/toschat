@@ -12,10 +12,14 @@ class Message(Container):
         content-align: right middle;
         color: greenyellow;
         text-style: bold;
+        padding-right: 1;
     }
     .left-message {
         content-align: left middle;
         text-style: bold;
+    }
+    .date {
+        content-align: center middle;
     }
     '''
 
@@ -24,15 +28,20 @@ class Message(Container):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        sender = self.message["sender"]
         message = self.message["message"]
 
-        if sender["id"] == self.app.user["id"]:
+        if self.message["type"] == "date":
             text = message["text"]
-            classes = "right-message"
+            classes = "date"
         else:
-            text = f"{sender['username']}: {message['text']}"
-            classes = "left-message"
+            sender = self.message["sender"]
+
+            if sender["id"] == self.app.user["id"]:
+                text = message["text"]
+                classes = "right-message"
+            else:
+                text = f"{sender['username']}: {message['text']}"
+                classes = "left-message"
 
         yield Static(
             text, 
