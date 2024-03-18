@@ -27,16 +27,18 @@ class Message(Container):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        if self.message["sender"]["id"] == 0:
-            text = self.message["message"]["text"]
-            classes = "empty-chatroom"
-            
-        elif self.message["sender"]["id"] == self.app.user["id"]:
-            text = self.message["message"]["text"] 
-            classes = "right-message"
+        sender = self.message["sender"]
+        message = self.message["message"]
 
+        if sender["id"] == self.app.user["id"]:
+            text = message["text"]
+            classes = "right-message"
         else:
-            text = f"{self.message['sender']['username']}: {self.message['message']['text']}"
+            text = f"{sender['username']}: {message['text']}"
             classes = "left-message"
 
-        yield Static(text, id=f"message-text-{self.message['message']['id']}", classes=classes)
+        yield Static(
+            text, 
+            id=f"message-text-{self.message['message']['id']}", 
+            classes=classes
+        )

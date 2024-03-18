@@ -23,5 +23,6 @@ class Message(models.Model):
     def serialize(self):
         return {
             "sender": self.sender.serialize(),
-            "message": {"id": self.id, "text": self.text}
+            "message": {"id": self.id, "text": self.text},
+            "chatroom_id": self.chatroom.id
         }

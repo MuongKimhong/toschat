@@ -42,4 +42,10 @@ class SendMessage(APIView):
             sender_id=request.user.id,
             text=request.data["text"]
         )
-        return Response({"new_message": message.serialize()}, status=200)
+        message = message.serialize()
+
+        for member in chatroom.members.all():
+            if member.id != request.user.id:
+                message["receiver"] = member.serialize()
+
+        return Response({"new_message": message}, status=200)

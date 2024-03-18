@@ -35,7 +35,9 @@ class WriteMessageInput(Input, can_focus=True):
                 access_token=self.app.access_token
             )
             if res["status_code"] == 200:
-                self.app.query_one("ChatScreen").post_message(
+                chatscreen = self.app.query_one("ChatScreen")
+                chatscreen.websocket.emit("send-message", res["data"]["new_message"])
+                chatscreen.post_message(
                     ReceiveNewChatMessage(res["data"]["new_message"])
                 )
 

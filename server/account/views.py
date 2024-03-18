@@ -89,6 +89,7 @@ class AddNewContact(APIView):
         for room in ChatRoom.objects.filter(members=request.user):
             if contact in room.members.all():
                 can_create_new_room = False
+                break
 
         if can_create_new_room:
             new_chatroom = ChatRoom.objects.create()

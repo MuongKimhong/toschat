@@ -76,7 +76,6 @@ class ContactScreen(Screen, can_focus=True):
         yield ContactListContainer(contacts_list_view=self.contacts_list_view)
 
     def on_screen_resume(self, event: events.ScreenResume) -> None:
-        self.contacts_list_view.clear()
         res = ApiRequests().get_all_contacts_request(self.app.access_token)
 
         if res["status_code"] == 200:
@@ -84,3 +83,6 @@ class ContactScreen(Screen, can_focus=True):
                 self.contacts_list_view.append(
                     ContactListItem(contact["username"], contact["chatroom_id"])
                 )
+
+    def on_screen_suspend(self, event: events.ScreenSuspend) -> None:
+        self.contacts_list_view.clear()
