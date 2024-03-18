@@ -2,6 +2,8 @@ from textual.widgets import Input, ListItem
 from textual import events, log
 
 from components.message import Message
+
+from custom_messages_events import ReceiveNewChatMessage
 from api_requests import ApiRequests
 
 
@@ -33,7 +35,8 @@ class WriteMessageInput(Input, can_focus=True):
                 access_token=self.app.access_token
             )
             if res["status_code"] == 200:
-                self.app.query_one("#messages-list-view").append(
-                    ListItem(Message(res["data"]["new_message"])) 
+                self.app.query_one("ChatScreen").post_message(
+                    ReceiveNewChatMessage(res["data"]["new_message"])
                 )
+
             self.value = ""
