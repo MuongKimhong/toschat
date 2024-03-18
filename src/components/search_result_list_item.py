@@ -18,9 +18,21 @@ class Result(Container):
         yield Static(self.username, classes="username")
 
         if self.added:
-            yield Button("Added", classes="add-btn", variant="default", disabled=True)
+            yield Button(
+                label="Added", 
+                classes="add-btn", 
+                id=str(self.username), 
+                variant="default", 
+                disabled=True
+            )
         else:
-            yield Button("Add", classes="add-btn", variant="default")
+            yield Button(
+                label="Add", 
+                classes="add-btn", 
+                id=str(self.username), 
+                variant="default",
+                disabled=False
+            )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         res = ApiRequests().add_new_contact_request(
@@ -28,8 +40,10 @@ class Result(Container):
             access_token=self.app.access_token
         )
         if res["status_code"] == 200:
-            from screens.contacts import ContactScreen
-            self.app.switch_screen(ContactScreen())
+            if not event.button.disabled:
+                self.added = True
+                event.button.disabled = True
+                event.button.label = "Added"
 
 
 class ResultListItem(ListItem):
