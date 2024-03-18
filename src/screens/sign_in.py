@@ -1,13 +1,12 @@
 from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Static
-from textual.containers import Container
 
+from components.buttons.create_new_account_btn import CreateNewAccountButton
 from components.inputs.username_input import UsernameInput
 from components.inputs.password_input import PasswordInput
 from components.buttons.signin_btn import SignInButton
 from components.error_message import ErrorMessage
-from components.buttons.create_new_account_btn import CreateNewAccountButton
 
 from styles.css import SIGN_IN_SCREEN_STYLES
 

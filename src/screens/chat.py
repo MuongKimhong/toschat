@@ -1,10 +1,8 @@
-from typing import Dict
-
-from textual.widgets import Button, Static, ListView, ListItem, TextArea
+from textual.widgets import Button, ListView, ListItem
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual import events, log, work
+from textual import events
 import socketio
 
 from components.inputs.write_message_input import WriteMessageInput
@@ -90,8 +88,8 @@ class ChatScreen(Screen):
         if res["status_code"] == 200: 
             messages = [ListItem(Message(message)) for message in res["data"]["messages"]]
 
-        self.messages_list_view.extend(messages)
-        self.messages_list_view.scroll_end()
+            self.messages_list_view.extend(messages)
+            self.messages_list_view.scroll_end(animate=False)
 
     def on_screen_suspend(self, event) -> None:
         self.websocket.disconnect()
@@ -105,4 +103,5 @@ class ChatScreen(Screen):
         if (sender["id"] == self.app.user["id"]) or (receiver["id"] == self.app.user["id"]):
             if chatroom_id == self.app.current_chatroom_id:
                 self.messages_list_view.append(ListItem(Message(message.new_message)))
+                self.messages_list_view.scroll_end()
         

@@ -1,7 +1,6 @@
-from textual.widgets import Input, ListItem
-from textual import events, log
+from textual.widgets import Input
+from textual import events
 
-from components.message import Message
 
 from custom_messages_events import ReceiveNewChatMessage
 from api_requests import ApiRequests

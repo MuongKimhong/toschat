@@ -1,5 +1,3 @@
-from typing import Dict, Union
-
 from django.db import models
 
 

@@ -1,23 +1,5 @@
-from typing import Dict, Union
+from typing import Dict
 import requests
-
-
-def get_messages() -> list[Dict[str, Dict[str, str]]]:
-    messages = [
-        {
-            "sender": {"username": "testing", "id": "1"},
-            "message": {"id": "1", "text": "Hello world"}
-        },
-        {
-            "sender": {"username": "current", "id": "2"},
-            "message": {"id": "1", "text": "Hey man"}
-        },
-        {
-            "sender": {"username": "testing", "id": "1"},
-            "message": {"id": "3", "text": "What are you doing"}
-        },
-    ]
-    return messages
 
 
 class ApiRequests:
@@ -27,7 +9,7 @@ class ApiRequests:
     def headers(self, access_token: str) -> Dict[str, str]:
         return {"Authorization": f"Bearer {access_token}"}
 
-    def response(self, res) -> Dict[str, Union[int, Dict[str, str]]]:
+    def response(self, res) -> Dict[str, int | dict]:
         return {"status_code": res.status_code, "data": res.json()}
 
     def sign_up_request(self, username: str, password: str, confirm_password: str):

@@ -1,8 +1,7 @@
-from textual.widgets import Input, Button, ListView, ListItem, Static
+from textual.widgets import Input, Button, ListView
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual import events, log
 
 from components.search_result_list_item import ResultListItem
 from api_requests import ApiRequests
@@ -65,4 +64,3 @@ class NewContactScreen(Screen):
     def compose(self) -> ComposeResult:
         yield SearchResultUpperContainer()
         yield SearchResultContainer(self.results_list_view)
- 

@@ -1,7 +1,6 @@
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Button
-from textual import events, log
 
 
 class CreateNewAccountButton(Container, can_focus=True):

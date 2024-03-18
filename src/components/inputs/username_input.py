@@ -1,6 +1,5 @@
-from textual.app import ComposeResult
-from textual import events, log
-from textual.widgets import Static, Input
+from textual.widgets import Input
+from textual import events
 
 
 class UsernameInput(Input, can_focus=True):
@@ -10,9 +9,6 @@ class UsernameInput(Input, can_focus=True):
         margin-bottom: 1;
     }
     '''
-
-    def on_mount(self, event: events.Mount) -> None:
-        pass
 
     def on_key(self, event: events.Key) -> None:
         if event.key == "space":

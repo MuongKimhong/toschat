@@ -1,5 +1,3 @@
-from typing import Dict
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -13,7 +11,7 @@ class User(AbstractUser):
     def __str__(self) -> str:
         return f"{self.username} - {self.id}"
 
-    def serialize(self) -> Dict[str, str]:
+    def serialize(self):
         return {"id": self.id, "username": self.username}
 
 
@@ -23,7 +21,7 @@ class UserContact(models.Model):
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
 
-    def serialize(self) -> Dict[str, Dict[str, str]]:
+    def serialize(self):
         data = {
             "user": self.user.serialize(),
             "contact": self.contact.serialize()

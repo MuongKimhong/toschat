@@ -1,8 +1,7 @@
 from textual.widgets import ListItem, Static
 from textual.containers import Container
 from textual.app import ComposeResult
-from textual.color import Color
-from textual import events, log
+from textual import events
 
 from styles.css import CONTACT_STYLES, CONTACT_LIST_ITEM_STYLES
 
@@ -37,5 +36,4 @@ class ContactListItem(ListItem):
     def on_click(self, event: events.Click) -> None:
         from screens.chat import ChatScreen
         self.app.current_chatroom_id = self.chatroom_id
-        log(f"contact click and room id is {self.chatroom_id}")
         self.app.switch_screen(ChatScreen()) 

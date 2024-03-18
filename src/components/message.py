@@ -1,9 +1,6 @@
-from typing import Dict
-
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Static
-from textual import log
 
 
 class Message(Container):

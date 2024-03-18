@@ -1,12 +1,13 @@
-from textual.widgets import Static, Button, Input, Label
-from textual.widgets import ListView, ListItem
+from textual.widgets import Button, Input
 from textual.containers import Container
 from textual.app import ComposeResult
+from textual.widgets import ListView
 from textual.screen import Screen
-from textual import events, log
+from textual import events
 
 from components.contact_list_item import ContactListItem
 from api_requests import ApiRequests
+
 from styles.css import (
     CONTACT_SCREEN_STYLES,
     CONTACT_LIST_CONTAINER_STYLES,

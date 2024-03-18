@@ -1,13 +1,11 @@
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual.widgets import Static, Input
-from textual.containers import Container
-from textual import log, events
+from textual.widgets import Static
 
+from components.buttons.signin_exist_acc_btn import SignInWithExistAccountButton
 from components.inputs.username_input import UsernameInput
 from components.inputs.password_input import PasswordInput
 from components.buttons.signup_btn import SignUpButton
-from components.buttons.signin_exist_acc_btn import SignInWithExistAccountButton
 from components.error_message import ErrorMessage
 
 from styles.css import SIGN_UP_SCREEN_STYLES
