@@ -47,13 +47,8 @@ class GetMessages(APIView):
         if request.user not in chatroom.members.all():
             return Response({"user_not_in_room": True}, status=400)
 
-        # serialized_messages = []
         messages = Message.objects.filter(chatroom__id=chatroom.id)
         messages = self.group_messages_by_date(messages)
-
-        # grouped_messages = dict()       
-
-        # messages = [message.serialize() for message in messages]
         return Response({"messages": messages}, status=200)
 
 
