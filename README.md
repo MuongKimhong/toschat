@@ -1,5 +1,6 @@
 ## Chat with your friends within your terminal (Linux & Mac)
 
+![Screenshot](new_screenshot_one.png) ![Screenshot](new_screenshot_two.png)
 
 ## Installation
 ```bash
@@ -11,3 +12,5 @@ use `toschat` command to open the application
 toschat
 ```
 to quit the application presse `Ctrl+c` or use icoo at left of the header
+
+All data are stored in live server!
