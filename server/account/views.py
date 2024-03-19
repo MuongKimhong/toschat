@@ -13,7 +13,6 @@ def get_token(user) -> dict:
     access_token  = refresh_token.access_token
     data = {
         'user': user.serialize(),
-        'refresh_token': str(refresh_token),
         'access_token' : str(access_token)
     }
     return data

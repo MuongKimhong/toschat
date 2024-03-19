@@ -2,6 +2,7 @@ from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Button
 
+from screens.contacts import ContactScreen
 from api_requests import ApiRequests
 
 
@@ -41,13 +42,11 @@ class SignInButton(Container, can_focus=True):
             if res["status_code"] == 400:
                 err_msg.update("Username or password is incorrect")
                 err_msg.styles.display = "block"
+                u_input.focus()
             elif res["status_code"] == 200:
                 self.app.access_token = res["data"]["access_token"]
                 self.app.user = res["data"]["user"]
                 self.app.title = res["data"]["user"]["username"]
 
-                from screens.contacts import ContactScreen
                 err_msg.styles.display = "none"
                 self.app.switch_screen(ContactScreen())
-
-        u_input.focus()
