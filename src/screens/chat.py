@@ -66,7 +66,7 @@ class ChatScreen(Screen):
         self.messages_list_view = ListView(*[], id="messages-list-view")
 
         self.websocket = socketio.Client()
-        self.websocket.connect("http://localhost:3000")
+        self.websocket.connect("https://websocket.toschat.xyz")
 
         @self.websocket.on("new-message")
         def on_message(new_message):
