@@ -2,7 +2,7 @@
 
 RED='\033[0;31m'
 CYAN='\033[0;36m'
-GREEN='\033[0;32m]'
+GREEN='\033[0;32m'
 HEART_ICON='\u2665'
 NC='\033[0m' # No Color
 
@@ -40,8 +40,8 @@ sudo chmod +x /usr/local/bin/toschat
 
 
 echo -e "${CYAN}[INFO] Installation completed\n${NC}"
-echo -e "${CYAN}-> run: toschat to open the application\n${NC}"
+echo -e "${CYAN}[INFO] To open the application run command: toschat\n${NC}"
 
-echo -e "${CYAN}\n Code with Love ${HEART_ICON} \n${NC}"
+echo -e "${CYAN}[Important Message] Code with Love ${HEART_ICON} \n${NC}"
 
-echo -e "${CYAN}\nVist https://github.com/MuongKimhong/toschat for more info.\n${NC}"
+echo -e "${CYAN}Visit https://github.com/MuongKimhong/toschat for more info.${NC}"
