@@ -17,6 +17,7 @@ class Main(App):
         self.current_chatroom_id = None
         self.current_chat_username = None
         self.user = None
+        self.title = "TosChat"
         self.switch_screen(SignInScreen())
 
     def on_mount(self, event: events.Mount) -> None:
