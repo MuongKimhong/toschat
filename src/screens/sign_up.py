@@ -7,6 +7,7 @@ from components.inputs.username_input import UsernameInput
 from components.inputs.password_input import PasswordInput
 from components.buttons.signup_btn import SignUpButton
 from components.error_message import ErrorMessage
+from components.header import TosChatHeader
 
 from styles.css import SIGN_UP_SCREEN_STYLES
 from api_requests import ApiRequests
@@ -17,6 +18,7 @@ class SignUpScreen(Screen):
     api_requests = ApiRequests()
 
     def compose(self) -> ComposeResult:
+        yield TosChatHeader(show_clock=True)
         yield Static("Create New Account", id="create-new-account-txt")
         yield ErrorMessage("", id="signup-error-message")
         yield UsernameInput(

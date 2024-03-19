@@ -4,6 +4,7 @@ from textual.app import ComposeResult
 from textual.screen import Screen
 
 from components.search_result_list_item import ResultListItem
+from components.header import TosChatHeader
 from api_requests import ApiRequests
 from styles.css import (
     NEW_CONTACT_SCREEN_STYLES,
@@ -62,5 +63,6 @@ class NewContactScreen(Screen):
         super().__init__()
 
     def compose(self) -> ComposeResult:
+        yield TosChatHeader(show_clock=True)
         yield SearchResultUpperContainer()
         yield SearchResultContainer(self.results_list_view)

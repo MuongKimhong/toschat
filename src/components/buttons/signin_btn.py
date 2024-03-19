@@ -44,6 +44,7 @@ class SignInButton(Container, can_focus=True):
             elif res["status_code"] == 200:
                 self.app.access_token = res["data"]["access_token"]
                 self.app.user = res["data"]["user"]
+                self.app.title = res["data"]["user"]["username"]
 
                 from screens.contacts import ContactScreen
                 err_msg.styles.display = "none"

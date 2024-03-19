@@ -7,6 +7,7 @@ from components.inputs.username_input import UsernameInput
 from components.inputs.password_input import PasswordInput
 from components.buttons.signin_btn import SignInButton
 from components.error_message import ErrorMessage
+from components.header import TosChatHeader
 
 from styles.css import SIGN_IN_SCREEN_STYLES
 
@@ -15,6 +16,7 @@ class SignInScreen(Screen):
     DEFAULT_CSS = SIGN_IN_SCREEN_STYLES
 
     def compose(self) -> ComposeResult:
+        yield TosChatHeader(show_clock=True)
         yield Static("Sign In", id="sign-in-txt")
         yield ErrorMessage("", id="signin-error-message")
         yield UsernameInput(

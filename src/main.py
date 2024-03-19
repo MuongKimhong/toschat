@@ -18,8 +18,8 @@ class Main(App):
         self.switch_screen(SignInScreen())
 
     def on_mount(self, event: events.Mount) -> None:
-        # default screen
-        self.push_screen(SignInScreen())
+        self.push_screen(SignInScreen()) # default screen
+        self.title = "TosChat" # header text
 
 
 if __name__ == "__main__":

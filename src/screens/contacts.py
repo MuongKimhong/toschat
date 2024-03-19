@@ -6,6 +6,7 @@ from textual.screen import Screen
 from textual import events
 
 from components.contact_list_item import ContactListItem
+from components.header import TosChatHeader
 from api_requests import ApiRequests
 
 from styles.css import (
@@ -73,6 +74,7 @@ class ContactScreen(Screen, can_focus=True):
         super().__init__()
 
     def compose(self) -> ComposeResult:
+        yield TosChatHeader(show_clock=True)
         yield ContactListUpperContainer()
         yield ContactListContainer(contacts_list_view=self.contacts_list_view)
 

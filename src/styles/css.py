@@ -2,11 +2,12 @@ SIGN_IN_SCREEN_STYLES = '''
     SignInScreen {
         background: rgb(18, 18, 18);
         color: white;
-        padding: 3 6;
+        padding: 0 6;
     }
     #sign-in-txt {
         text-style: bold;
-        content-align: center middle
+        content-align: center middle;
+        margin-top: 3;
     }
     #or-txt {
         text-style: bold;
@@ -18,11 +19,12 @@ SIGN_UP_SCREEN_STYLES = '''
     SignUpScreen {
         background: rgb(18, 18, 18);
         color: white;
-        padding: 3 6;
+        padding: 0 6;
     }
     #create-new-account-txt {
         text-style: bold;
         content-align: center middle;
+        margin-top: 3;
     }
     #or-txt {
         text-style: bold;
@@ -34,7 +36,7 @@ CONTACT_SCREEN_STYLES = '''
     ContactScreen {
         background: rgb(18, 18, 18);
         color: white;
-        padding: 1 2;
+        padding: 0 2;
     }
 '''
 
@@ -45,6 +47,7 @@ ContactListUpperContainer {
     grid-size: 3;
     grid-columns: 3fr 1fr 1fr;
     height: 3;
+    margin-top: 1;
 }
 #new-contact {
     margin-left: 2;
@@ -101,7 +104,7 @@ NEW_CONTACT_SCREEN_STYLES = '''
     NewContactScreen {
         background: rgb(18, 18, 18);
         color: white;
-        padding: 1 2;
+        padding: 0 2;
     }
 '''
 
@@ -163,6 +166,7 @@ NEW_CONTACT_SCREEN_UPPER_CONTAINER_STYLES = '''
         grid-size: 3;
         grid-columns: 3fr 1fr 1fr;
         height: 3;
+        margin-top: 1;
     }
     #go-back-btn {
         margin-left: 2;
@@ -177,7 +181,7 @@ CHAT_SCREEN_STYLES = '''
     ChatScreen {
         background: rgb(18, 18, 18);
         color: white;
-        padding: 1 2;
+        padding: 0 2;
     }
     #back-btn {
         border: none;
@@ -196,6 +200,6 @@ MESSAGES_CONTAINER_STYLES = '''
         border-left: hidden grey;
         border-right: hidden grey;
         color: white;
-        height: 90%;
+        height: 85%;
     }
 '''

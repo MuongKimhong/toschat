@@ -6,6 +6,7 @@ from textual import events
 import socketio
 
 from components.inputs.write_message_input import WriteMessageInput
+from components.header import TosChatHeader
 from components.message import Message
 from styles.css import CHAT_SCREEN_STYLES, MESSAGES_CONTAINER_STYLES
 
@@ -21,6 +22,7 @@ class ChatScreenUpperContainer(Container):
             grid-size: 2;
             grid-columns: 3fr 3fr;
             height: 1;
+            margin-top: 1;
         }
         #go-back-btn {
             border: none;
@@ -73,6 +75,7 @@ class ChatScreen(Screen):
         super().__init__()
 
     def compose(self) -> ComposeResult:
+        yield TosChatHeader(show_clock=True)
         yield ChatScreenUpperContainer()
         yield MessagesContainer(messages_list_view=self.messages_list_view)
         yield WriteMessageInput(placeholder="Write message")
