@@ -14,7 +14,10 @@ SECRET_KEY = 'django-insecure-n%+v0#qdth(w$1w=-_5672bvv%^+sd=%b=7!ue#g66yo*@-+&t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "170.64.194.87",
+    "api.toschat.xyz"
+]
 
 
 # Application definition
@@ -137,11 +140,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Australia/Sydney'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
