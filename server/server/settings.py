@@ -1,6 +1,13 @@
 from pathlib import Path
 from datetime import timedelta
 
+import json
+
+
+with open("/etc/toschat_server_conf.json") as toschat_server_config:
+    toschat_config = json.load(toschat_server_config)
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,16 +16,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n%+v0#qdth(w$1w=-_5672bvv%^+sd=%b=7!ue#g66yo*@-+&t'
+# SECRET_KEY = 'django-insecure-n%+v0#qdth(w$1w=-_5672bvv%^+sd=%b=7!ue#g66yo*@-+&t'
+SECRET_KEY = toschat_config["secret_key"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [
-    "170.64.194.87",
-    "api.toschat.xyz",
-    "toschat.xyz"
-]
+ALLOWED_HOSTS = toschat_config["allow_hosts"]
 
 
 # Application definition
@@ -82,6 +86,9 @@ CORS_ALLOW_ALL_ORIGINS: True
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
     )
 }
 
