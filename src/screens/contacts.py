@@ -74,7 +74,7 @@ class ContactScreen(Screen, can_focus=True):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield TosChatHeader(show_clock=True)
+        yield TosChatHeader()
         yield ContactListUpperContainer()
         yield ContactListContainer(contacts_list_view=self.contacts_list_view)
 

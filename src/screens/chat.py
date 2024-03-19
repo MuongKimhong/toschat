@@ -75,7 +75,7 @@ class ChatScreen(Screen):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield TosChatHeader(show_clock=True)
+        yield TosChatHeader()
         yield ChatScreenUpperContainer()
         yield MessagesContainer(messages_list_view=self.messages_list_view)
         yield WriteMessageInput(placeholder="Write message")

@@ -63,6 +63,6 @@ class NewContactScreen(Screen):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield TosChatHeader(show_clock=True)
+        yield TosChatHeader()
         yield SearchResultUpperContainer()
         yield SearchResultContainer(self.results_list_view)

@@ -16,7 +16,7 @@ class SignInScreen(Screen):
     DEFAULT_CSS = SIGN_IN_SCREEN_STYLES
 
     def compose(self) -> ComposeResult:
-        yield TosChatHeader(show_clock=True)
+        yield TosChatHeader()
         yield Static("Sign In", id="sign-in-txt")
         yield ErrorMessage("", id="signin-error-message")
         yield UsernameInput(

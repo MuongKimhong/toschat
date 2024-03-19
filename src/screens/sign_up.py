@@ -18,7 +18,7 @@ class SignUpScreen(Screen):
     api_requests = ApiRequests()
 
     def compose(self) -> ComposeResult:
-        yield TosChatHeader(show_clock=True)
+        yield TosChatHeader()
         yield Static("Create New Account", id="create-new-account-txt")
         yield ErrorMessage("", id="signup-error-message")
         yield UsernameInput(
