@@ -18,7 +18,7 @@ class GetMessages(APIView):
         all_dates = []
 
         for message in messages:
-            date_str = message.created_date.date().strftime('%d/%m/%Y')
+            date_str = message.created_date_str
 
             if date_str not in all_dates:
                 all_dates.append(date_str)
@@ -29,9 +29,7 @@ class GetMessages(APIView):
                 "message": {"id": 0, "text": date} 
             })
             for message in messages:
-                msg_date_str = message.created_date.date().strftime('%d/%m/%Y')
-
-                if msg_date_str == date:
+                if message.created_date_str == date:
                     serialized_messages.append(message.serialize())
                     messages.exclude(id=message.id)
 
@@ -69,6 +67,9 @@ class SendMessage(APIView):
             sender_id=request.user.id,
             text=request.data["text"]
         )
+        message.created_time_str = message.created_date.strftime("%I:%M %p")
+        message.save()
+        
         message = message.serialize()
 
         for member in chatroom.members.all():
