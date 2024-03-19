@@ -16,7 +16,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "170.64.194.87",
-    "api.toschat.xyz"
+    "api.toschat.xyz",
+    "toschat.xyz"
 ]
 
 
