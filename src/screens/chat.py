@@ -1,4 +1,4 @@
-from textual.widgets import Button, ListView, ListItem
+from textual.widgets import Button, ListView, ListItem, Static
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.screen import Screen
@@ -19,24 +19,31 @@ class ChatScreenUpperContainer(Container):
         ChatScreenUpperContainer {
             align: center top;
             layout: grid;
-            grid-size: 2;
-            grid-columns: 3fr 3fr;
+            grid-size: 3;
+            grid-columns: 2fr 2fr 2fr;
             height: 1;
             margin-top: 1;
         }
         #go-back-btn {
             border: none;
             height: 1;
+            content-align: center middle;
         }
         #logout {
             border: none;
             height: 1;
-            content-align: right middle;
+            content-align: center middle;
+        }
+        #name-text {
+            border: none;
+            height: 1;
+            content-align: center middle
         }
     '''
 
     def compose(self) -> ComposeResult:
         yield Button("< Back", variant="default", id="go-back-btn")
+        yield Button(self.app.current_chat_username, variant="default", id="name-text", disabled=True)
         yield Button("Logout", variant="default", id="logout")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

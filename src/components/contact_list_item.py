@@ -36,4 +36,5 @@ class ContactListItem(ListItem):
     def on_click(self, event: events.Click) -> None:
         from screens.chat import ChatScreen
         self.app.current_chatroom_id = self.chatroom_id
+        self.app.current_chat_username = self.username
         self.app.switch_screen(ChatScreen()) 
