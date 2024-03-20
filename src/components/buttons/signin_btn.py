@@ -5,8 +5,6 @@ from textual.widgets import Button
 from screens.contacts import ContactScreen
 from api_requests import ApiRequests
 
-import time
-
 
 class SignInButton(Container, can_focus=True):
     DEFAULT_CSS = '''   
@@ -51,7 +49,12 @@ class SignInButton(Container, can_focus=True):
             elif res["status_code"] == 200:
                 self.app.access_token = res["data"]["access_token"]
                 self.app.user = res["data"]["user"]
-                self.app.title = res["data"]["user"]["username"]
+
+                if len(res["data"]["user"]["username"]) < 15: 
+                    self.app.title = f"Signed in as {res['data']['user']['username']}"
+                else:
+                    self.app.title = res["data"]["user"]["username"]
+
                 self.app.switch_screen(ContactScreen())
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

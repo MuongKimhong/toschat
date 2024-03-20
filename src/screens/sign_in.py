@@ -35,3 +35,7 @@ class SignInScreen(Screen):
         yield SignInButton()
         yield Static("or", id="or-txt")
         yield CreateNewAccountButton()
+
+    def on_key(self, event) -> None:
+        if (event.key == "enter"):
+            self.query_one("SignInButton").query_one("#signin-btn").press()

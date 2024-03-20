@@ -11,12 +11,10 @@ from components.error_message import ErrorMessage
 from components.header import TosChatHeader
 
 from styles.css import SIGN_UP_SCREEN_STYLES
-from api_requests import ApiRequests
 
 
 class SignUpScreen(Screen):
     DEFAULT_CSS = SIGN_UP_SCREEN_STYLES
-    api_requests = ApiRequests()
 
     def compose(self) -> ComposeResult:
         yield TosChatHeader()
@@ -43,4 +41,8 @@ class SignUpScreen(Screen):
         yield SignUpButton()
         yield Static("or", id="or-txt")
         yield SignInWithExistAccountButton()
+
+    def on_key(self, event) -> None:
+        if (event.key == "enter"):
+            self.query_one("SignUpButton").query_one("#signup-btn").press()
 
