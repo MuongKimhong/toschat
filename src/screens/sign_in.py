@@ -6,6 +6,7 @@ from components.buttons.create_new_account_btn import CreateNewAccountButton
 from components.inputs.username_input import UsernameInput
 from components.inputs.password_input import PasswordInput
 from components.buttons.signin_btn import SignInButton
+from components.please_wait_text import PleaseWaitText
 from components.error_message import ErrorMessage
 from components.header import TosChatHeader
 
@@ -18,6 +19,7 @@ class SignInScreen(Screen):
     def compose(self) -> ComposeResult:
         yield TosChatHeader()
         yield Static("Sign In", id="sign-in-txt")
+        yield PleaseWaitText("Please wait ....", id="signin-pls-wait-txt")
         yield ErrorMessage("", id="signin-error-message")
         yield UsernameInput(
             placeholder="Enter username",

@@ -6,6 +6,7 @@ from components.buttons.signin_exist_acc_btn import SignInWithExistAccountButton
 from components.inputs.username_input import UsernameInput
 from components.inputs.password_input import PasswordInput
 from components.buttons.signup_btn import SignUpButton
+from components.please_wait_text import PleaseWaitText
 from components.error_message import ErrorMessage
 from components.header import TosChatHeader
 
@@ -20,6 +21,7 @@ class SignUpScreen(Screen):
     def compose(self) -> ComposeResult:
         yield TosChatHeader()
         yield Static("Create New Account", id="create-new-account-txt")
+        yield PleaseWaitText("Please wait ...", id="signup-pls-wait-txt")
         yield ErrorMessage("", id="signup-error-message")
         yield UsernameInput(
             placeholder="Enter username", 

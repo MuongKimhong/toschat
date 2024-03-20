@@ -23,14 +23,16 @@ class SignUpButton(Container, can_focus=True):
     def compose(self) -> ComposeResult:
         yield Button("Sign Up", variant="default", id="signup-btn")
 
-    def on_button_pressed(self, event: Button.Pressed) -> None:
+    def send_request(self) -> None:
         u_input = self.app.query_one("#signup-username-input")
         p_input = self.app.query_one("#signup-password-input")
         c_p_input = self.app.query_one("#signup-confirm-password-input")
+        pls_wait_text = self.app.query_one("#signup-pls-wait-txt")
         err_msg = self.app.query_one("#signup-error-message")
         err_msg.styles.display = "none"
 
         if (u_input.value.strip() == "") or (p_input.value.strip() == "") or (c_p_input.value.strip() == ""):
+            pls_wait_text.styles.display = "none"
             err_msg.update("All input fields are required")
             err_msg.styles.display = "block"
         
@@ -51,11 +53,14 @@ class SignUpButton(Container, can_focus=True):
                 elif "username_taken" in res["data"]:
                     err_msg.update(res["data"]["username_taken"])
 
+                pls_wait_text.styles.display = "none"
                 err_msg.styles.display = "block"
-
+                u_input.focus()
             else:
                 from screens.sign_in import SignInScreen
-                err_msg.styles.display = "none"
                 self.app.switch_screen(SignInScreen())
 
-        u_input.focus()
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        self.app.query_one("#signup-error-message").styles.display = "none"
+        self.app.query_one("#signup-pls-wait-txt").styles.display = "block"
+        self.app.set_timer(delay=0.1, callback=self.send_request)
