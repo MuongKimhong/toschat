@@ -39,6 +39,16 @@ sudo curl -o /usr/local/bin/toschat "https://raw.githubusercontent.com/MuongKimh
 sudo chmod +x /usr/local/bin/toschat
 
 
+# remove server dir and websocket dir
+if [ -d "$HOME/toschat/server" ]; then
+    rm -rf "$HOME/toschat/server"
+fi
+
+if [ -d "$HOME/toschat/websocket" ]; then
+    rm -rf "$HOME/toschat/websocket"
+fi
+
+
 echo -e "${CYAN}[INFO] Installation completed\n${NC}"
 echo -e "${CYAN}[INFO] To open the application run command: toschat\n${NC}"
 
