@@ -4,8 +4,6 @@ from rest_framework.views import APIView
 
 from chat.models import ChatRoom, Message
 
-import time
-
 
 class GetMessages(APIView):
     permission_classes = [ IsAuthenticated ]
@@ -68,13 +66,14 @@ class SendMessage(APIView):
             text=request.data["text"]
         )
         message.created_time_str = message.created_date.strftime("%I:%M %p")
+        message.created_date_str = message.created_date.date().strftime('%d/%m/%Y')
         message.save()
         
-        message = message.serialize()
+        serialized_message = message.serialize()
 
         for member in chatroom.members.all():
             if member.id != request.user.id:
-                message["receiver"] = member.serialize()
+                serialized_message["receiver"] = member.serialize()
                 break
 
-        return Response({"new_message": message}, status=200)
+        return Response({"new_message": serialized_message}, status=200)
