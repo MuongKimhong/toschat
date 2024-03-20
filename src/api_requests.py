@@ -4,7 +4,7 @@ import requests
 
 class ApiRequests:
     def __init__(self) -> None:
-        self.base_url = "https://toschat.xyz"
+        self.base_url = "https://api.toschat.xyz"
     
     def headers(self, access_token: str) -> Dict[str, str]:
         return {"Authorization": f"Bearer {access_token}"}

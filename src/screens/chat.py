@@ -14,6 +14,10 @@ from custom_messages_events import ReceiveNewChatMessage
 from api_requests import ApiRequests
 
 
+from textual import log
+import time
+
+
 class ChatScreenUpperContainer(Container):
     DEFAULT_CSS = '''
         ChatScreenUpperContainer {
@@ -73,7 +77,7 @@ class ChatScreen(Screen):
         self.messages_list_view = ListView(*[], id="messages-list-view")
 
         self.websocket = socketio.Client()
-        self.websocket.connect("https://websocket.toschat.xyz")
+        self.websocket.connect("https://websockethandler.toschat.xyz")
 
         @self.websocket.on("new-message")
         def on_message(new_message):
@@ -97,7 +101,6 @@ class ChatScreen(Screen):
         )
         if res["status_code"] == 200: 
             messages = [ListItem(Message(message)) for message in res["data"]["messages"]]
-
             self.messages_list_view.extend(messages)
             self.messages_list_view.scroll_end(animate=False)
 
