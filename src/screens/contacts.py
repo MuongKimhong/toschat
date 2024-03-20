@@ -67,7 +67,6 @@ class ContactListContainer(Container):
 
 class ContactScreen(Screen, can_focus=True):
     DEFAULT_CSS = CONTACT_SCREEN_STYLES
-    contacts = list()
 
     def __init__(self) -> None:
         self.contacts_list_view = ListView(*[], id="contacts-list-view")
@@ -82,9 +81,14 @@ class ContactScreen(Screen, can_focus=True):
         res = ApiRequests().get_all_contacts_request(self.app.access_token)
 
         if res["status_code"] == 200:
-            for contact in res["data"]["contacts"]:
+            if len(res["data"]["contacts"]) > 0:
+                for contact in res["data"]["contacts"]:
+                    self.contacts_list_view.append(
+                        ContactListItem(contact["username"], contact["chatroom_id"])
+                    )
+            else:
                 self.contacts_list_view.append(
-                    ContactListItem(contact["username"], contact["chatroom_id"])
+                    ContactListItem("", "", empty_contact=True)
                 )
 
     def on_screen_suspend(self, event: events.ScreenSuspend) -> None:

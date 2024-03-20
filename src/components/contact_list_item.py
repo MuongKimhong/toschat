@@ -15,20 +15,24 @@ class Contact(Container):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield Static(f"{self.username} - room {self.room}", classes="username")
+        yield Static(self.username, classes="username")
         yield Static(">>", classes="arrow")
 
 
 class ContactListItem(ListItem):
     DEFAULT_CSS = CONTACT_LIST_ITEM_STYLES
 
-    def __init__(self, username: str, chatroom_id: int) -> None:
+    def __init__(self, username: str, chatroom_id: int, empty_contact=False) -> None:
         self.username = username
         self.chatroom_id = chatroom_id
+        self.empty_contact = empty_contact
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield Contact(username=self.username, room=self.chatroom_id)
+        if self.empty_contact:
+            yield Static("You have no contacts at the moment.", id="empty-contact-txt")
+        else:
+            yield Contact(username=self.username, room=self.chatroom_id)
 
     def watch_highlighted(self, value: bool) -> None:
         pass

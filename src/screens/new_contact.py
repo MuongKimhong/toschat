@@ -40,8 +40,10 @@ class SearchResultUpperContainer(Container):
                 access_token=self.app.access_token
             )
             if response["status_code"] == 200:
-                for result in response["data"]["results"]:
-                    results_list_view.append(ResultListItem(result["username"], result["added"]))
+                    for result in response["data"]["results"]:
+                        results_list_view.append(ResultListItem(result["username"], result["added"]))
+        else: 
+            results_list_view.append(ResultListItem("", "", empty_result=True))
 
 
 class SearchResultContainer(Container):
@@ -66,3 +68,8 @@ class NewContactScreen(Screen):
         yield TosChatHeader()
         yield SearchResultUpperContainer()
         yield SearchResultContainer(self.results_list_view)
+
+    def on_screen_resume(self, event) -> None:
+        self.results_list_view.append(
+            ResultListItem("", "", empty_result=True)
+        )

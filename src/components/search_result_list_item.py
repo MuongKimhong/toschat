@@ -49,13 +49,17 @@ class Result(Container):
 class ResultListItem(ListItem):
     DEFAULT_CSS = RESULT_LIST_ITEM_STYLES
 
-    def __init__(self, username: str, added: bool) -> None:
+    def __init__(self, username: str, added: bool, empty_result=False) -> None:
         self.username = username
         self.added = added
+        self.empty_result = empty_result
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield Result(username=self.username, added=self.added)
+        if self.empty_result:
+            yield Static("Search contacts by typing their names", id="empty-result-txt")
+        else:
+            yield Result(username=self.username, added=self.added)
 
     def watch_highlighted(self, value: bool) -> None:
         pass

@@ -98,6 +98,11 @@ CONTACT_LIST_ITEM_STYLES = '''
         background: rgb(18, 18, 18);
         overflow: hidden hidden;
     }
+    #empty-contact-txt {
+        content-align: center middle;
+        margin-top: 1;
+        color: white;
+    }
 '''
 
 NEW_CONTACT_SCREEN_STYLES = '''
@@ -128,6 +133,11 @@ RESULT_LIST_ITEM_STYLES = '''
         padding-right: 2;
         background: rgb(18, 18, 18);
         overflow: hidden hidden;
+    }
+    #empty-result-txt {
+        content-align: center middle;
+        margin-top: 1;
+        color: white;
     }
 '''
 
