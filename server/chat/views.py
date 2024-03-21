@@ -28,10 +28,10 @@ class GetMessages(APIView):
                 "type": "date", 
                 "message": {"id": 0, "text": date} 
             })
-            for message in messages:
+            for i, message in enumerate(messages):
                 if message.created_date_str == date:
                     serialized_messages.append(message.serialize())
-                    messages.exclude(id=message.id)
+                    messages.pop(i)
 
         serialized_messages.reverse()
 
