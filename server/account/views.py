@@ -25,28 +25,15 @@ class SignIn(APIView):
     permission_classes = [ AllowAny ]
 
     def post(self, request):
-        if cache.get(f"toschat_user_{request.data['username']}") is None:
+        try:
+            user = User.objects.get(username=request.data["username"])
+        except User.DoesNotExist:
             return Response({"error": True}, status=400)
 
-        user = cache.get(f"toschat_user_{request.data['username']}")
+        if check_password(request.data["password"], user.password) is False:
+            return Response({"error": True}, status=400)
 
-        if check_password(request.data["password"], user["hashed_password"]) is False:
-            return Response({"error": True}, status=400) 
-
-        res = {
-            "user": {"id": user["id"], "username": user["username"]},
-            "access_token": user["access_token"]
-        }
-
-        # try:
-        #     user = User.objects.get(username=request.data["username"])
-        # except User.DoesNotExist:
-        #     return Response({"error": True}, status=400)
-
-        # if check_password(request.data["password"], user.password) is False:
-        #     return Response({"error": True}, status=400)
-
-        return Response(res, status=200)
+        return Response(get_token(user), status=200)
 
 
 class SignUp(APIView):
@@ -69,17 +56,6 @@ class SignUp(APIView):
                 username=data["username"],
                 password=make_password(data["password"])
             )
-            user_cache_key = f"toschat_user_{user.username}"
-
-            if cache.get(user_cache_key) is None:
-                user_cache = {
-                    "id": user.id,
-                    "username": user.username,
-                    "access_token": get_token(user)["access_token"],
-                    "hashed_password": user.password
-                }
-                # set new cache for new user, when sign in , read from cache
-                cache.set(user_cache_key, user_cache, timeout=None)
 
         return Response({"success": True}, status=200)
 

@@ -30,19 +30,3 @@ def check_password_time(user, password):
     print(passed)
     print(f"check_password_time() finished in {time.time() - start}")
 
-
-def create_cache_existing_users():
-    users = User.objects.all()
-    
-    for user in users:
-        if cache.get(f"toschat_user_{user.username}") is None:
-            print(f"setting cache for user {user.username}")
-            refresh_token = RefreshToken.for_user(user) 
-            access_token  = refresh_token.access_token
-            user_cache = {
-                "id": user.id,
-                "username": user.username,
-                "access_token": str(access_token),
-                "hashed_password": user.password
-            }
-            cache.set(f"toschat_user_{user.username}", user_cache, timeout=None)
