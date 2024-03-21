@@ -145,7 +145,7 @@ class SearchUsersByUsername(APIView):
 
         results = []
         NUMBER_PER_PAGE = 8
-        search_results = User.objects.filter(username__icontains=search_text).exclude(id=request.user.id)
+        search_results = User.objects.filter(username__icontains=search_text).exclude(id=request.user.id).order_by("id")
 
         paginator = Paginator(search_results, NUMBER_PER_PAGE)
         page_results = paginator.page(pagination_page)
