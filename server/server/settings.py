@@ -171,6 +171,6 @@ AUTH_USER_MODEL = 'account.User'
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": "170.64.194.87:11211",
+        "LOCATION": "127.0.0.1:11211",
     }
 }
