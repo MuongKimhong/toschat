@@ -1,5 +1,6 @@
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.paginator import Paginator
+from django.core.cache import cache
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -24,15 +25,28 @@ class SignIn(APIView):
     permission_classes = [ AllowAny ]
 
     def post(self, request):
-        try:
-            user = User.objects.get(username=request.data["username"])
-        except User.DoesNotExist:
+        if cache.get(f"toschat_user_{request.data['username']}") is None:
             return Response({"error": True}, status=400)
 
-        if check_password(request.data["password"], user.password) is False:
-            return Response({"error": True}, status=400)
+        user = cache.get(f"toschat_user_{request.data['username']}")
 
-        return Response(get_token(user), status=200)
+        if check_password(request.data["password"], user["hashed_password"]) is False:
+            return Response({"error": True}, status=400) 
+
+        res = {
+            "user": {"id": user["id"], "username": user["username"]},
+            "access_token": user["access_token"]
+        }
+
+        # try:
+        #     user = User.objects.get(username=request.data["username"])
+        # except User.DoesNotExist:
+        #     return Response({"error": True}, status=400)
+
+        # if check_password(request.data["password"], user.password) is False:
+        #     return Response({"error": True}, status=400)
+
+        return Response(res, status=200)
 
 
 class SignUp(APIView):
@@ -55,6 +69,17 @@ class SignUp(APIView):
                 username=data["username"],
                 password=make_password(data["password"])
             )
+            user_cache_key = f"toschat_user_{user.username}"
+
+            if cache.get(user_cache_key) is None:
+                user_cache = {
+                    "id": user.id,
+                    "username" user.username,
+                    "access_token": get_token(user)["access_token"],
+                    "hashed_password": user.password
+                }
+                # set new cache for new user, when sign in , read from cache
+                cache.set(user_cache_key, user_cache, timeout=None)
 
         return Response({"success": True}, status=200)
 
@@ -116,25 +141,6 @@ class AddNewContact(APIView):
 
 class SearchUsersByUsername(APIView):
     permission_classes = [ IsAuthenticated ]
-
-    # def get(self, request):
-    #     search_text = request.query_params.get("search_text")
-    #     if search_text is None:
-    #         return Response({"param_missing": True}, status=400)
-
-    #     results = []
-    #     search_results = User.objects.filter(username__icontains=search_text).exclude(id=request.user.id)
-    #     for result in search_results:
-    #         user_result = result.serialize()
-    #         try:
-    #             UserContact.objects.get(user__id=request.user.id, contact__id=result.id)
-    #             user_result["added"] = True
-    #         except UserContact.DoesNotExist:
-    #             user_result["added"] = False
-
-    #         results.append(user_result)
-
-    #     return Response({"results": results}, status=200)
     
     def get(self, request):
         search_text = request.query_params.get("search_text")
