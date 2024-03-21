@@ -74,7 +74,7 @@ class SignUp(APIView):
             if cache.get(user_cache_key) is None:
                 user_cache = {
                     "id": user.id,
-                    "username" user.username,
+                    "username": user.username,
                     "access_token": get_token(user)["access_token"],
                     "hashed_password": user.password
                 }
