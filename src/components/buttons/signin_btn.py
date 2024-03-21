@@ -39,12 +39,10 @@ class SignInButton(Container, can_focus=True):
             err_msg.styles.display = "block"
         
         else:
-            start = time.time()
             res = ApiRequests().sign_in_request(
                 username=u_input.value, 
                 password=p_input.value
             )
-            log(f"sign in time {time.time() - start}")
             if res["status_code"] == 400:
                 pls_wait_txt.styles.display = "none"
                 err_msg.update("Username or password is incorrect")

@@ -1,8 +1,9 @@
-from textual.widgets import Button, ListView, ListItem, Static
+from textual.widgets import Button, ListView, ListItem
+from textual.worker import get_current_worker
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual import events
+from textual import events, work
 import socketio
 
 from components.inputs.write_message_input import WriteMessageInput
@@ -75,14 +76,7 @@ class ChatScreen(Screen):
 
     def __init__(self) -> None:
         self.messages_list_view = ListView(*[], id="messages-list-view")
-
-        self.websocket = socketio.Client()
-        self.websocket.connect("https://websockethandler.toschat.xyz")
-
-        @self.websocket.on("new-message")
-        def on_message(new_message):
-            self.listen_websocket(new_message)
-
+        self.websocket = None
         super().__init__()
 
     def compose(self) -> ComposeResult:
@@ -91,18 +85,35 @@ class ChatScreen(Screen):
         yield MessagesContainer(messages_list_view=self.messages_list_view)
         yield WriteMessageInput(placeholder="Write message")
 
+    def connect_websocket(self) -> None:
+        self.websocket = socketio.Client()
+        self.websocket.connect("https://websockethandler.toschat.xyz")
+
+        @self.websocket.on("new-message")
+        def on_message(new_message):
+            self.listen_websocket(new_message)
+
     def listen_websocket(self, new_message) -> None:
         self.post_message(ReceiveNewChatMessage(new_message))
 
-    def on_screen_resume(self, event: events.ScreenResume) -> None: 
+    async def on_screen_resume(self, event: events.ScreenResume) -> None: 
+        self.handle_get_message_request()
+        self.connect_websocket()
+
+    @work(exclusive=True, thread=True)
+    def handle_get_message_request(self) -> None:
+        worker = get_current_worker()
+
         res = ApiRequests().get_messages_request(
             chatroom_id=self.app.current_chatroom_id,
             access_token=self.app.access_token
         )
         if res["status_code"] == 200: 
             messages = [ListItem(Message(message)) for message in res["data"]["messages"]]
-            self.messages_list_view.extend(messages)
-            self.messages_list_view.scroll_end(animate=False)
+            
+            if not worker.is_cancelled:
+                self.app.call_from_thread(self.messages_list_view.extend, messages)
+                self.app.call_from_thread(self.messages_list_view.scroll_end, animate=False)
 
     def on_screen_suspend(self, event) -> None:
         self.websocket.disconnect()

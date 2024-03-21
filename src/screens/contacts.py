@@ -1,9 +1,10 @@
+from textual.worker import get_current_worker
 from textual.widgets import Button, Input
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import ListView
 from textual.screen import Screen
-from textual import events
+from textual import events, work
 
 from components.contact_list_item import ContactListItem
 from components.header import TosChatHeader
@@ -32,24 +33,32 @@ class ContactListUpperContainer(Container):
         elif event.button.id == "logout":
             self.app.logout()
 
-    def on_input_changed(self, event: Input.Changed) -> None:
+    async def on_input_changed(self, event: Input.Changed) -> None:
         self.search_contacts(event.value)
 
+    @work(exclusive=True, thread=True)
     def search_contacts(self, search_text: str) -> None:
+        worker = get_current_worker()
         contacts_list_view = self.app.query_one("#contacts-list-view")
-        contacts_list_view.clear()
+
+        if not worker.is_cancelled:
+            self.app.call_from_thread(contacts_list_view.clear)
 
         if search_text.strip() == "":
             res = ApiRequests().get_all_contacts_request(self.app.access_token)
             list_items = [ContactListItem(contact["username"], contact["chatroom_id"]) for contact in res["data"]["contacts"]]
-            contacts_list_view.extend(list_items)
+            
+            if not worker.is_cancelled:
+                self.app.call_from_thread(contacts_list_view.extend, list_items)
         else:
             res = ApiRequests().search_contacts_request(
                 search_text=search_text,
                 access_token=self.app.access_token
             )
             list_items = [ContactListItem(result["username"], result["chatroom_id"]) for result in res["data"]["results"]]      
-            contacts_list_view.extend(list_items)
+
+            if not worker.is_cancelled:
+                self.app.call_from_thread(contacts_list_view.extend, list_items)
 
 
 class ContactListContainer(Container):
