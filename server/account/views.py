@@ -1,4 +1,6 @@
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.paginator import Paginator
+
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
@@ -115,14 +117,41 @@ class AddNewContact(APIView):
 class SearchUsersByUsername(APIView):
     permission_classes = [ IsAuthenticated ]
 
+    # def get(self, request):
+    #     search_text = request.query_params.get("search_text")
+    #     if search_text is None:
+    #         return Response({"param_missing": True}, status=400)
+
+    #     results = []
+    #     search_results = User.objects.filter(username__icontains=search_text).exclude(id=request.user.id)
+    #     for result in search_results:
+    #         user_result = result.serialize()
+    #         try:
+    #             UserContact.objects.get(user__id=request.user.id, contact__id=result.id)
+    #             user_result["added"] = True
+    #         except UserContact.DoesNotExist:
+    #             user_result["added"] = False
+
+    #         results.append(user_result)
+
+    #     return Response({"results": results}, status=200)
+    
     def get(self, request):
         search_text = request.query_params.get("search_text")
+        pagination_page = request.query_params.get("pagination_page", 1)
+
         if search_text is None:
             return Response({"param_missing": True}, status=400)
 
         results = []
+        NUMBER_PER_PAGE = 8
         search_results = User.objects.filter(username__icontains=search_text).exclude(id=request.user.id)
-        for result in search_results:
+
+        paginator = Paginator(search_results, NUMBER_PER_PAGE)
+        page_results = paginator.page(pagination_page)
+        paginator_results = page_results.object_list
+
+        for result in paginator_results:
             user_result = result.serialize()
             try:
                 UserContact.objects.get(user__id=request.user.id, contact__id=result.id)
@@ -132,7 +161,13 @@ class SearchUsersByUsername(APIView):
 
             results.append(user_result)
 
-        return Response({"results": results}, status=200)
+        response = {
+            "results": results,
+            "has_next": page_results.has_next(),
+            "has_previous": page_results.has_previous(),
+            "current_page": pagination_page
+        }
+        return Response(response, status=200)
 
 
 class SearchContacts(APIView):
