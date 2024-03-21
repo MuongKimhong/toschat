@@ -33,25 +33,23 @@ class ContactListUpperContainer(Container):
             self.app.logout()
 
     def on_input_changed(self, event: Input.Changed) -> None:
+        self.search_contacts(event.value)
+
+    def search_contacts(self, search_text: str) -> None:
         contacts_list_view = self.app.query_one("#contacts-list-view")
         contacts_list_view.clear()
 
-        if event.value.strip() == "":
+        if search_text.strip() == "":
             res = ApiRequests().get_all_contacts_request(self.app.access_token)
-
-            for contact in res["data"]["contacts"]:
-                contacts_list_view.append(
-                    ContactListItem(contact["username"], contact["chatroom_id"])
-                )        
+            list_items = [ContactListItem(contact["username"], contact["chatroom_id"]) for contact in res["data"]["contacts"]]
+            contacts_list_view.extend(list_items)
         else:
             res = ApiRequests().search_contacts_request(
-                search_text=event.value,
+                search_text=search_text,
                 access_token=self.app.access_token
             )
-            for result in res["data"]["results"]:
-                contacts_list_view.append(
-                    ContactListItem(result["username"], result["chatroom_id"])
-                )
+            list_items = [ContactListItem(result["username"], result["chatroom_id"]) for result in res["data"]["results"]]      
+            contacts_list_view.extend(list_items)
 
 
 class ContactListContainer(Container):
