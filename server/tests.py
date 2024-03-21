@@ -41,7 +41,7 @@ def create_cache_existing_users():
             access_token  = refresh_token.access_token
             user_cache = {
                 "id": user.id,
-                "username" user.username,
+                "username": user.username,
                 "access_token": str(access_token),
                 "hashed_password": user.password
             }
