@@ -119,6 +119,7 @@ SEARCH_RESULTS_CONTAINER_STYLES = '''
         margin-top: 2;
         padding-left: 2;
         padding-right: 2;
+        height: 80%;
     }
     ListView {
         background: rgb(18, 18, 18);
@@ -211,5 +212,30 @@ MESSAGES_CONTAINER_STYLES = '''
         border-right: hidden grey;
         color: white;
         height: 85%;
+    }
+'''
+
+SEARCH_RESULTS_PAGINATION_BUTTONS_STYLE = '''
+    SearchResultPaginationButtons {
+        align: center middle;
+        layout: grid;
+        grid-size: 3;
+        grid-columns: 2fr 2fr 2fr;
+        height: 1;
+    }
+    #previous-btn {
+        border: none;
+        height: 1;
+        content-align: center middle;
+    }
+    #next-btn {
+        border: none;
+        height: 1;
+        content-align: center middle;
+    }
+    #pagination-number {
+        border: none;
+        height: 1;
+        content-align: center middle;
     }
 '''

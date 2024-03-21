@@ -52,10 +52,11 @@ class ApiRequests:
         res = requests.get(url, params=params, headers=self.headers(access_token))
         return self.response(res)
 
-    def search_users_by_username_request(self, search_text: str | None, access_token: str):
+    def search_users_by_username_request(self, search_text: str | None, access_token: str, page: int):
         url = f"{self.base_url}/api-account/search-users-by-username/"
         params = {
-            "search_text": search_text
+            "search_text": search_text,
+            "pagination_page": page
         }
         res = requests.get(url, params=params, headers=self.headers(access_token))
         return self.response(res)
