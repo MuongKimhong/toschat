@@ -28,10 +28,10 @@ class GetMessages(APIView):
                 "type": "date", 
                 "message": {"id": 0, "text": date} 
             })
-            for i, message in enumerate(messages):
+            for message in messages:
                 if message.created_date_str == date:
                     serialized_messages.append(message.serialize())
-                    messages.pop(i)
+                    messages.exclude(id=message.id)
 
         return serialized_messages
 
@@ -46,14 +46,8 @@ class GetMessages(APIView):
         if request.user not in chatroom.members.all():
             return Response({"user_not_in_room": True}, status=400)
 
-        NUMBER_PER_PAGE = 35
-        messages = Message.objects.filter(chatroom__id=chatroom.id).order_by("-id")
-
-        paginator = Paginator(messages, NUMBER_PER_PAGE)
-        page_results = paginator.page(pagination_page)
-        paginator_results = list(page_results.object_list)
-        paginator_results.reverse()
-        messages = self.group_messages_by_date(paginator_results)
+        messages = Message.objects.filter(chatroom__id=chatroom.id)
+        messages = self.group_messages_by_date(messages)
         return Response({"messages": messages}, status=200)
 
 
