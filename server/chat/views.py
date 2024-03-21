@@ -33,6 +33,8 @@ class GetMessages(APIView):
                     serialized_messages.append(message.serialize())
                     messages.exclude(id=message.id)
 
+        serialized_messages.reverse()
+
         return serialized_messages
 
     def get(self, request):
@@ -52,8 +54,6 @@ class GetMessages(APIView):
         paginator = Paginator(messages, NUMBER_PER_PAGE)
         page_results = paginator.page(pagination_page)
         paginator_results = page_results.object_list
-        paginator_results.reverse()
-
         messages = self.group_messages_by_date(paginator_results)
         return Response({"messages": messages}, status=200)
 
