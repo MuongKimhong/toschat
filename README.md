@@ -1,6 +1,8 @@
 ## Chat with your friends within your terminal (Linux & Mac)
 
-![Screenshot](new_screenshot_one.png) ![Screenshot](new_screenshot_two.png)
+Sign In             |  Let Chat!
+:-------------------------:|:-------------------------:
+![Screenshot](new_screenshot_one.png)   |  ![Screenshot](new_screenshot_two.png)
 
 ## Installation
 ```bash
