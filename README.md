@@ -5,8 +5,12 @@ Sign In             |  Let Chat!
 ![Screenshot](new_screenshot_one.png)   |  ![Screenshot](new_screenshot_two.png)
 
 ## Note
-For better experience change font size to 10 or 11 and resize terminal to at least
-`95x40`
+on Linux, if you're using Ubuntu or Debain terminal will be resize automatically when app starts. 
+
+on MacOs, terminal will be resize automatically when app starts if you're using
+iTerm, iTerm2 or Terminal.
+
+For better experience change font size to 10 or 11
 
 ## Installation
 ```bash
