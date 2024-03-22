@@ -1,6 +1,7 @@
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Static
+from textual import events
 
 
 class Message(Container):
@@ -22,29 +23,38 @@ class Message(Container):
         content-align: center middle;
     }
     '''
-
+    
     def __init__(self, message) -> None:
         self.message = message
         super().__init__()
 
+    @property
+    def message_is_type_date(self) -> bool:
+        return True if self.message["type"] == "date" else False
+
+    @property
+    def message_is_sender_message(self) -> bool:
+        if self.message["sender"]["id"] == self.app.user["id"]:
+            return True
+            
+        return False
+
     def compose(self) -> ComposeResult:
-        message = self.message["message"]
-
-        if self.message["type"] == "date":
-            text = message["text"]
+        if self.message_is_type_date:
             classes = "date"
-        else:
-            sender = self.message["sender"]
+            message_text = self.message["message"]["text"]
 
-            if sender["id"] == self.app.user["id"]:
-                text = message["text"]
+        else:            
+            if self.message_is_sender_message:
                 classes = "right-message"
+                message_text = self.message["message"]["text"]
+
             else:
-                text = f"{sender['username']}: {message['text']}"
                 classes = "left-message"
+                message_text = f"{self.message['sender']['username']}: {self.message['message']['text']}"
 
         yield Static(
-            text, 
-            id=f"message-text-{self.message['message']['id']}", 
-            classes=classes
+            renderable=message_text,
+            classes=classes,
+            id=f"message-text-{self.message['message']['id']}"
         )

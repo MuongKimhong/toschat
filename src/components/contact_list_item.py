@@ -1,9 +1,10 @@
 from textual.widgets import ListItem, Static
 from textual.containers import Container
 from textual.app import ComposeResult
-from textual import events
+from textual import events, work
 
 from styles.css import CONTACT_STYLES, CONTACT_LIST_ITEM_STYLES
+from screens.chat import ChatScreen
 
 
 class Contact(Container):
@@ -38,7 +39,6 @@ class ContactListItem(ListItem):
         pass
 
     def on_click(self, event: events.Click) -> None:
-        from screens.chat import ChatScreen
-        self.app.current_chatroom_id = self.chatroom_id
         self.app.current_chat_username = self.username
+        self.app.current_chatroom_id = self.chatroom_id
         self.app.switch_screen(ChatScreen()) 
