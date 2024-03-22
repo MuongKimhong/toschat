@@ -49,6 +49,10 @@ if [ -d "$HOME/toschat/websocket" ]; then
 fi
 
 
+if [ "$(uname)" == "Linux" ]; then
+    sudo apt-get install xdotool
+fi
+
 echo -e "${CYAN}[INFO] Installation completed\n${NC}"
 echo -e "${CYAN}[INFO] To open the application run command: toschat\n${NC}"
 
