@@ -5,6 +5,7 @@ from chat.models import ChatRoom
 
 
 class User(AbstractUser):
+    is_online = models.BooleanField(default=False)
     username = models.CharField(max_length=200, unique=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
@@ -12,7 +13,7 @@ class User(AbstractUser):
         return f"{self.username} - {self.id}"
 
     def serialize(self):
-        return {"id": self.id, "username": self.username}
+        return {"id": self.id, "username": self.username, "is_online": self.is_online}
 
 
 class UserContact(models.Model):

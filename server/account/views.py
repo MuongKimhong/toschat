@@ -33,6 +33,8 @@ class SignIn(APIView):
         if check_password(request.data["password"], user.password) is False:
             return Response({"error": True}, status=400)
 
+        user.is_online = True
+        user.save()
         return Response(get_token(user), status=200)
 
 
@@ -163,3 +165,13 @@ class SearchContacts(APIView):
         results = UserContact.objects.filter(user__id=request.user.id, contact__username__icontains=text) 
         results = [contact.serialize()["contact"] for contact in results]
         return Response({"results": results}, status=200)
+
+
+class UserGoesOffline(APIView):
+    permission_classes = [ IsAuthenticated ]
+
+    def post(self, request):
+        user = request.user
+        user.is_online = False
+        user.save()
+        return Response({"success": True}, status=200)
