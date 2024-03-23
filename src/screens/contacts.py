@@ -46,7 +46,11 @@ class ContactListUpperContainer(Container):
 
         if search_text.strip() == "":
             res = ApiRequests().get_all_contacts_request(self.app.access_token)
-            list_items = [ContactListItem(contact["username"], contact["chatroom_id"]) for contact in res["data"]["contacts"]]
+            list_items = []
+            for contact in res["data"]["contacts"]:
+                list_items.append(
+                    ContactListItem(contact["username"], contact["is_online"], contact["chatroom_id"])
+                )
             
             if not worker.is_cancelled:
                 self.app.call_from_thread(contacts_list_view.extend, list_items)
@@ -54,8 +58,12 @@ class ContactListUpperContainer(Container):
             res = ApiRequests().search_contacts_request(
                 search_text=search_text,
                 access_token=self.app.access_token
-            )
-            list_items = [ContactListItem(result["username"], result["chatroom_id"]) for result in res["data"]["results"]]      
+            )    
+            list_items = []
+            for result in res["data"]["results"]:
+                list_items.append(
+                    ContactListItem(result["username"], result["is_online"], result["chatroom_id"])
+                )
 
             if not worker.is_cancelled:
                 self.app.call_from_thread(contacts_list_view.extend, list_items)
@@ -91,11 +99,11 @@ class ContactScreen(Screen, can_focus=True):
             if len(res["data"]["contacts"]) > 0:
                 for contact in res["data"]["contacts"]:
                     self.contacts_list_view.append(
-                        ContactListItem(contact["username"], contact["chatroom_id"])
+                        ContactListItem(contact["username"], contact["is_online"], contact["chatroom_id"])
                     )
             else:
                 self.contacts_list_view.append(
-                    ContactListItem("", "", empty_contact=True)
+                    ContactListItem("", False, "", empty_contact=True)
                 )
 
     def on_screen_suspend(self, event: events.ScreenSuspend) -> None:

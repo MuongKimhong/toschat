@@ -83,6 +83,10 @@ CONTACT_STYLES = '''
     .username {
         text-style: bold;
     }
+    .username-online {
+        text-style: bold;
+        color: greenyellow;
+    }
     .arrow {
         text-style: bold;
         content-align: right middle;

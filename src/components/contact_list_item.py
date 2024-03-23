@@ -10,20 +10,25 @@ from screens.chat import ChatScreen
 class Contact(Container):
     DEFAULT_CSS = CONTACT_STYLES
 
-    def __init__(self, username: str, room) -> None:
+    def __init__(self, username: str, is_online: bool) -> None:
+        self.is_online = is_online
         self.username = username
-        self.room = room
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        yield Static(self.username, classes="username")
+        if self.is_online:
+            yield Static(f"{self.username} (online)", classes="username-online")
+        else:
+            yield Static(self.username, classes="username")
+
         yield Static(">>", classes="arrow")
 
 
 class ContactListItem(ListItem):
     DEFAULT_CSS = CONTACT_LIST_ITEM_STYLES
 
-    def __init__(self, username: str, chatroom_id: int, empty_contact=False) -> None:
+    def __init__(self, username: str, is_online: bool, chatroom_id: int, empty_contact=False) -> None:
+        self.is_online = is_online
         self.username = username
         self.chatroom_id = chatroom_id
         self.empty_contact = empty_contact
@@ -33,7 +38,7 @@ class ContactListItem(ListItem):
         if self.empty_contact:
             yield Static("You have no contacts at the moment.", id="empty-contact-txt")
         else:
-            yield Contact(username=self.username, room=self.chatroom_id)
+            yield Contact(username=self.username, is_online=self.is_online)
 
     def watch_highlighted(self, value: bool) -> None:
         pass

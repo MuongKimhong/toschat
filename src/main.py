@@ -2,6 +2,10 @@ from textual.app import App
 from textual import events
 
 from screens.sign_in import SignInScreen
+from api_requests import ApiRequests
+
+import threading
+import atexit
 
 
 class Main(App):
@@ -27,4 +31,18 @@ class Main(App):
 
 if __name__ == "__main__":
     app = Main()
+    access_token = app.access_token
+    api_requests = ApiRequests()
+
+    def app_exit_handler() -> None:
+        if access_token is not None:
+            thread = threading.Thread(target=user_goes_offline)
+            thread.start()
+
+        print("[INFO] Have a nice day!")
+
+    def user_goes_offline() -> None:
+        api_requests.user_goes_offline_request(access_token=access_token)
+
+    atexit.register(app_exit_handler)
     app.run()

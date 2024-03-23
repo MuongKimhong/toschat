@@ -77,3 +77,8 @@ class ApiRequests:
         }
         res = requests.post(url, data=data, headers=self.headers(access_token))
         return self.response(res)
+
+    def user_goes_offline_request(self, access_token: str):
+        url = f"{self.base_url}/api-account/user-goes-offline/"
+        res = requests.post(url, headers=self.headers(access_token))
+        return self.response(res)
