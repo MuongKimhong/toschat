@@ -17,11 +17,19 @@ class Contact(Container):
 
     def compose(self) -> ComposeResult:
         if self.is_online:
-            yield Static(f"{self.username} (online)", classes="username-online")
+            yield Static(
+                renderable=f"{self.username} (online)", 
+                classes="username-online", 
+                id=f"contact-{self.username}"
+            )
         else:
-            yield Static(self.username, classes="username")
+            yield Static(
+                renderable=self.username, 
+                classes="username", 
+                id=f"contact-{self.username}"
+            )
 
-        yield Static(">>", classes="arrow")
+        yield Static(">>", classes="arrow")            
 
 
 class ContactListItem(ListItem):

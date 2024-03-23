@@ -16,6 +16,10 @@ from styles.css import SIGN_IN_SCREEN_STYLES
 class SignInScreen(Screen):
     DEFAULT_CSS = SIGN_IN_SCREEN_STYLES
 
+    def __init__(self) -> None:
+        self.screen_name = "SignInScreen"
+        super().__init__()
+
     def compose(self) -> ComposeResult:
         yield TosChatHeader()
         yield Static("Sign In", id="sign-in-txt")

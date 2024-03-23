@@ -77,6 +77,7 @@ class ChatScreen(Screen):
     def __init__(self) -> None:
         self.messages_list_view = ListView(*[], id="messages-list-view")
         self.websocket = None
+        self.screen_name = "ChatScreen"
         super().__init__()
 
     def compose(self) -> ComposeResult:

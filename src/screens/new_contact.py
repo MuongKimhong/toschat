@@ -140,6 +140,7 @@ class NewContactScreen(Screen):
 
     def __init__(self) -> None:
         self.results_list_view = ListView(*[], id="results-list-view")
+        self.screen_name = "NewContactScreen"
         super().__init__()
 
     def compose(self) -> ComposeResult:

@@ -5,8 +5,8 @@ from textual.widgets import Button
 from screens.contacts import ContactScreen
 from api_requests import ApiRequests
 
-from textual import log
-import time
+import atexit
+
 
 class SignInButton(Container, can_focus=True):
     DEFAULT_CSS = '''   
@@ -25,6 +25,19 @@ class SignInButton(Container, can_focus=True):
 
     def compose(self) -> ComposeResult:
         yield Button("Sign In", variant="default", id="signin-btn")
+
+    def register_app_exit_handler(self) -> None:
+        if not self.app.registered_atexit_handler:
+            access_token = self.app.access_token
+
+            def app_exit_handler() -> None:
+                if access_token is not None:
+                    res = ApiRequests().user_goes_offline_request(access_token=access_token)
+
+                print("[INFO] Have a nice day!")
+
+            atexit.register(app_exit_handler)
+            self.app.registered_atexit_handler = True
 
     def send_request(self) -> None:
         u_input = self.app.query_one("#signin-username-input")
@@ -49,6 +62,7 @@ class SignInButton(Container, can_focus=True):
                 err_msg.styles.display = "block"
                 u_input.focus()
             elif res["status_code"] == 200:
+                self.app.connect_websocket_online_status_namespace()
                 self.app.access_token = res["data"]["access_token"]
                 self.app.user = res["data"]["user"]
 
@@ -56,7 +70,8 @@ class SignInButton(Container, can_focus=True):
                     self.app.title = f"Signed in as {res['data']['user']['username']}"
                 else:
                     self.app.title = res["data"]["user"]["username"]
-
+                
+                self.register_app_exit_handler()
                 self.app.switch_screen(ContactScreen())
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

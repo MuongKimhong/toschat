@@ -16,6 +16,10 @@ from styles.css import SIGN_UP_SCREEN_STYLES
 class SignUpScreen(Screen):
     DEFAULT_CSS = SIGN_UP_SCREEN_STYLES
 
+    def __init__(self) -> None:
+        self.screen_name = "SignUpScreen"
+        super().__init__()
+
     def compose(self) -> ComposeResult:
         yield TosChatHeader()
         yield Static("Create New Account", id="create-new-account-txt")

@@ -4,10 +4,12 @@ from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import ListView
 from textual.screen import Screen
-from textual import events, work
+from textual import events, work, log
 
 from components.contact_list_item import ContactListItem
 from components.header import TosChatHeader
+
+from custom_messages_events import ReceiveOnlineStatusUpdate
 from api_requests import ApiRequests
 
 from styles.css import (
@@ -85,6 +87,7 @@ class ContactScreen(Screen, can_focus=True):
 
     def __init__(self) -> None:
         self.contacts_list_view = ListView(*[], id="contacts-list-view")
+        self.screen_name = "ContactScreen"
         super().__init__()
 
     def compose(self) -> ComposeResult:
@@ -93,6 +96,11 @@ class ContactScreen(Screen, can_focus=True):
         yield ContactListContainer(contacts_list_view=self.contacts_list_view)
 
     def on_screen_resume(self, event: events.ScreenResume) -> None:
+        self.app.websocket_online_status_namespace.emit(
+            "update-online-status",
+            {"sender_name": self.app.user["username"], "status": "online"},
+            namespace="/onlineStatus"
+        )
         res = ApiRequests().get_all_contacts_request(self.app.access_token)
 
         if res["status_code"] == 200:
