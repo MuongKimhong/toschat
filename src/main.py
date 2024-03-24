@@ -18,7 +18,8 @@ class Main(App):
         # handle user online status update (online or offline)
         self.websocket_online_status_namespace = None
         self.registered_atexit_handler = False
-
+        
+        # change url for local server url for Socketio
         self.websocket_url = "https://websockethandler.toschat.xyz"
         super().__init__()
 
