@@ -1,6 +1,7 @@
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Button
+from textual import events
 
 
 class CreateNewAccountButton(Container, can_focus=True):
@@ -26,3 +27,7 @@ class CreateNewAccountButton(Container, can_focus=True):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         from screens.sign_up import SignUpScreen
         self.app.switch_screen(SignUpScreen())
+
+    def on_focus(self, event: events.Focus) -> None:
+        # forward focus to Button immediately
+        self.query_one("#create-new-account-btn").focus()

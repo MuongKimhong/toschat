@@ -1,6 +1,7 @@
 from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Static
+from textual import events
 
 from components.buttons.create_new_account_btn import CreateNewAccountButton
 from components.inputs.username_input import UsernameInput
@@ -40,6 +41,12 @@ class SignInScreen(Screen):
         yield Static("or", id="or-txt")
         yield CreateNewAccountButton()
 
-    def on_key(self, event) -> None:
+    def on_key(self, event: events.Key) -> None:
         if (event.key == "enter"):
-            self.query_one("SignInButton").query_one("#signin-btn").press()
+            focused_widget = self.app.focused
+
+            if (focused_widget.id == "signin-btn") or (focused_widget.id == "signin-password-input"):
+                self.query_one("#signin-btn").press()
+
+            elif focused_widget.id == "create-new-account-btn":
+                self.query_one("#create-new-account-btn").press()

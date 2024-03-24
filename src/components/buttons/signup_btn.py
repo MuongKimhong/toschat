@@ -1,6 +1,7 @@
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Button
+from textual import events
 
 from api_requests import ApiRequests
 
@@ -64,3 +65,7 @@ class SignUpButton(Container, can_focus=True):
         self.app.query_one("#signup-error-message").styles.display = "none"
         self.app.query_one("#signup-pls-wait-txt").styles.display = "block"
         self.app.set_timer(delay=0.1, callback=self.send_request)
+
+    def on_focus(self, event: events.Focus) -> None:
+        # forward focus to signup button immediately
+        self.query_one("#signup-btn").focus() 

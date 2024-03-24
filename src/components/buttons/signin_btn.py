@@ -1,6 +1,7 @@
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Button
+from textual import events
 
 from screens.contacts import ContactScreen
 from api_requests import ApiRequests
@@ -78,3 +79,7 @@ class SignInButton(Container, can_focus=True):
         self.app.query_one("#signin-error-message").styles.display = "none"
         self.app.query_one("#signin-pls-wait-txt").styles.display = "block"
         self.app.set_timer(delay=0.1, callback=self.send_request)
+
+    def on_focus(self, event: events.Focus) -> None:
+        # forward focus to button immediately
+        self.query_one("#signin-btn").focus()

@@ -1,6 +1,7 @@
 from textual.containers import Container
 from textual.app import ComposeResult
 from textual.widgets import Button
+from textual import events
 
 
 class SignInWithExistAccountButton(Container, can_focus=True):
@@ -26,3 +27,7 @@ class SignInWithExistAccountButton(Container, can_focus=True):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         from screens.sign_in import SignInScreen
         self.app.switch_screen(SignInScreen())
+
+    def on_focus(self, event: events.Focus) -> None:
+        # foward focus to signin with existing account button 
+        self.query_one("#signin-exist-acc-btn").focus()

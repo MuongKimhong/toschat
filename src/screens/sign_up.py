@@ -48,5 +48,12 @@ class SignUpScreen(Screen):
 
     def on_key(self, event) -> None:
         if (event.key == "enter"):
-            self.query_one("SignUpButton").query_one("#signup-btn").press()
+            focused_widget = self.app.focused
 
+            if ((focused_widget.id == "signup-btn") or 
+                (focused_widget.id == "signup-password-input") or 
+                (focused_widget.id == 'signup-confirm-password-input')):
+                self.query_one("#signup-btn").press()
+
+            elif (focused_widget.id == "signin-exist-acc-btn"):
+                self.query_one("#signin-exist-acc-btn").press()
