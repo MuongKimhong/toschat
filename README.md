@@ -46,6 +46,7 @@ to see message logs, you can you textual-dev server https://textual.textualize.i
 $ textual console
 ```
 #### To start Django & Socket.io servers locally
+Please make sure to change server urls to local url in `src/api_requests.py` and `src/main.py`
 ```
 $ python3 server/manage.py makemigrations
 $ python3 server/manage.py migrate
