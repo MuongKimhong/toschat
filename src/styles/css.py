@@ -215,7 +215,7 @@ MESSAGES_CONTAINER_STYLES = '''
         border-left: hidden grey;
         border-right: hidden grey;
         color: white;
-        height: 85%;
+        height: 92%;
     }
 '''
 

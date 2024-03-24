@@ -10,6 +10,8 @@ class WriteMessageInput(Input, can_focus=True):
     DEFAULT_CSS = '''
     WriteMessageInput {
         color: white;
+        dock: bottom;
+        margin-bottom: 2;
     }
     WriteMessageInput:focus {
         border: tall rgb(40, 40, 40);
