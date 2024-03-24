@@ -18,6 +18,8 @@ class Main(App):
         # handle user online status update (online or offline)
         self.websocket_online_status_namespace = None
         self.registered_atexit_handler = False
+
+        self.websocket_url = "https://websockethandler.toschat.xyz"
         super().__init__()
 
     def logout(self) -> None:
@@ -42,7 +44,7 @@ class Main(App):
     def connect_websocket_online_status_namespace(self) -> None:
         self.websocket_online_status_namespace = socketio.Client()
         self.websocket_online_status_namespace.connect(
-            "https://websockethandler.toschat.xyz", 
+            self.websocket_url, 
             namespaces=['/onlineStatus']
         )
         

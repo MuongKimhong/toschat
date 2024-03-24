@@ -88,7 +88,7 @@ class ChatScreen(Screen):
 
     def connect_websocket(self) -> None:
         self.websocket = socketio.Client()
-        self.websocket.connect("https://websockethandler.toschat.xyz")
+        self.websocket.connect(self.app.websocket_url)
 
         @self.websocket.on("new-message")
         def on_message(new_message):

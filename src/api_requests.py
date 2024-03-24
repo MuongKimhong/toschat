@@ -4,6 +4,7 @@ import requests
 
 class ApiRequests:
     def __init__(self) -> None:
+        # change url for local server
         self.base_url = "https://apihandler.toschat.xyz"
     
     def headers(self, access_token: str) -> Dict[str, str]:
