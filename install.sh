@@ -32,12 +32,13 @@ source $HOME/toschat/.venv/bin/activate
 
 pip3 install -r $HOME/toschat/requirements.txt
 
-
-# Download toschat.sh
-echo -e "${GREEN}[INFO] Setting up toschat...\n${NC}"
-sudo curl -o /usr/local/bin/toschat "https://raw.githubusercontent.com/MuongKimhong/toschat/master/toschat.sh"
-sudo chmod +x /usr/local/bin/toschat
-
+# only download toschat.sh to /usr/local/bin if it doesn't exist
+if [ ! -f "/usr/local/bin/toschat" ]; then
+    # Download toschat.sh
+    echo -e "${GREEN}[INFO] Setting up toschat...\n${NC}"
+    sudo curl -o /usr/local/bin/toschat "https://raw.githubusercontent.com/MuongKimhong/toschat/master/toschat.sh"
+    sudo chmod +x /usr/local/bin/toschat
+fi
 
 # remove server dir and websocket dir
 if [ -d "$HOME/toschat/server" ]; then
