@@ -20,7 +20,7 @@ class Main(App):
         self.registered_atexit_handler = False
         
         # change url for local server url for Socketio
-        self.websocket_url = "https://websockethandler.toschat.xyz"
+        self.websocket_url = "https://websocketconnection.toschat.xyz"
         super().__init__()
 
     def logout(self) -> None:
