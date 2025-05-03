@@ -31,7 +31,7 @@ class ContactListUpperContainer(Container):
         if event.button.id == "new-contact":
             from screens.new_contact import NewContactScreen
             self.app.switch_screen(NewContactScreen())
-        
+
         elif event.button.id == "logout":
             self.app.logout()
 
@@ -53,14 +53,14 @@ class ContactListUpperContainer(Container):
                 list_items.append(
                     ContactListItem(contact["username"], contact["is_online"], contact["chatroom_id"])
                 )
-            
+
             if not worker.is_cancelled:
                 self.app.call_from_thread(contacts_list_view.extend, list_items)
         else:
             res = ApiRequests().search_contacts_request(
                 search_text=search_text,
                 access_token=self.app.access_token
-            )    
+            )
             list_items = []
             for result in res["data"]["results"]:
                 list_items.append(
@@ -96,23 +96,27 @@ class ContactScreen(Screen, can_focus=True):
         yield ContactListContainer(contacts_list_view=self.contacts_list_view)
 
     def on_screen_resume(self, event: events.ScreenResume) -> None:
+        res = ApiRequests().get_all_contacts_request(self.app.access_token)
+
+        if res["status_code"] != 200:
+            return None
+
+        contacts = res["data"]["contacts"]
+        if len(contacts) > 0:
+            for contact in contacts:
+                self.contacts_list_view.append(
+                    ContactListItem(contact["username"], contact["is_online"], contact["chatroom_id"])
+                )
+        else:
+            self.contacts_list_view.append(
+                ContactListItem("", False, "", empty_contact=True)
+            )
+
         self.app.websocket_online_status_namespace.emit(
             "update-online-status",
             {"sender_name": self.app.user["username"], "status": "online"},
             namespace="/onlineStatus"
         )
-        res = ApiRequests().get_all_contacts_request(self.app.access_token)
-
-        if res["status_code"] == 200:
-            if len(res["data"]["contacts"]) > 0:
-                for contact in res["data"]["contacts"]:
-                    self.contacts_list_view.append(
-                        ContactListItem(contact["username"], contact["is_online"], contact["chatroom_id"])
-                    )
-            else:
-                self.contacts_list_view.append(
-                    ContactListItem("", False, "", empty_contact=True)
-                )
 
     def on_screen_suspend(self, event: events.ScreenSuspend) -> None:
         self.contacts_list_view.clear()

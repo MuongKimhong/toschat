@@ -10,7 +10,7 @@ import atexit
 
 
 class SignInButton(Container, can_focus=True):
-    DEFAULT_CSS = '''   
+    DEFAULT_CSS = '''
     SignInButton {
         margin-top: 0;
         padding-top: 0;
@@ -20,7 +20,7 @@ class SignInButton(Container, can_focus=True):
     }
     #signin-btn {
         content-align: center middle;
-        width: 4; 
+        width: 4;
     }
     '''
 
@@ -51,10 +51,10 @@ class SignInButton(Container, can_focus=True):
             pls_wait_txt.styles.display = "none"
             err_msg.update("All input fields are required")
             err_msg.styles.display = "block"
-        
+
         else:
             res = ApiRequests().sign_in_request(
-                username=u_input.value, 
+                username=u_input.value,
                 password=p_input.value
             )
             if res["status_code"] == 400:
@@ -66,12 +66,13 @@ class SignInButton(Container, can_focus=True):
                 self.app.connect_websocket_online_status_namespace()
                 self.app.access_token = res["data"]["access_token"]
                 self.app.user = res["data"]["user"]
+                self.app.contacts = res["data"]["contacts"]
 
-                if len(res["data"]["user"]["username"]) < 15: 
+                if len(res["data"]["user"]["username"]) < 15:
                     self.app.title = f"Signed in as {res['data']['user']['username']}"
                 else:
                     self.app.title = res["data"]["user"]["username"]
-                
+
                 self.register_app_exit_handler()
                 self.app.switch_screen(ContactScreen())
 

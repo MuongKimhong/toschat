@@ -12,7 +12,7 @@ from chat.models import ChatRoom
 
 
 def get_token(user) -> dict:
-    refresh_token = RefreshToken.for_user(user) 
+    refresh_token = RefreshToken.for_user(user)
     access_token  = refresh_token.access_token
     data = {
         'user': user.serialize(),
@@ -35,7 +35,14 @@ class SignIn(APIView):
 
         user.is_online = True
         user.save()
-        return Response(get_token(user), status=200)
+
+        user_token = get_token(user)
+
+        contacts = UserContact.objects.filter(user__id=user.id)
+        contacts = [contact.serialize()["contact"]["username"] for contact in contacts]
+
+        user_token["contacts"] = contacts
+        return Response(user_token, status=200)
 
 
 class SignUp(APIView):
@@ -49,7 +56,7 @@ class SignUp(APIView):
 
         elif data["password"] != data["confirm_password"]:
             return Response({"password_not_match": "Two password did not match"}, status=400)
- 
+
         try:
             user = User.objects.get(username=data["username"])
             return Response({"username_taken": "Username is already taken"}, status=400)
@@ -76,7 +83,7 @@ class AddNewContact(APIView):
 
     def create_contact(self, user_id: int, contact_id: int, room_id: int) -> UserContact:
         new_contact = UserContact.objects.create(
-            user_id=user_id, 
+            user_id=user_id,
             contact_id=contact_id,
             chatroom_id=room_id
         )
@@ -87,7 +94,7 @@ class AddNewContact(APIView):
             contact = User.objects.get(username=request.data["contact_username"])
         except User.DoesNotExist:
             return Response({"contact_not_exist": True}, status=400)
-        
+
         # create new chatroom for both user
         can_create_new_room = True
         for room in ChatRoom.objects.filter(members=request.user):
@@ -98,19 +105,19 @@ class AddNewContact(APIView):
         if can_create_new_room:
             new_chatroom = ChatRoom.objects.create()
             new_chatroom.members.add(request.user, contact)
-        
+
         try:
             user_contact = UserContact.objects.get(user__id=request.user.id, contact__id=contact.id)
         except UserContact.DoesNotExist:
             # create new contact for current user
             new_contact_current_user = self.create_contact(
-                user_id=request.user.id, 
+                user_id=request.user.id,
                 contact_id=contact.id,
                 room_id=new_chatroom.id
             )
             # create new contact for another user
             new_contact_another_user = self.create_contact(
-                user_id=contact.id, 
+                user_id=contact.id,
                 contact_id=request.user.id,
                 room_id=new_chatroom.id
             )
@@ -119,7 +126,7 @@ class AddNewContact(APIView):
 
 class SearchUsersByUsername(APIView):
     permission_classes = [ IsAuthenticated ]
-    
+
     def get(self, request):
         search_text = request.query_params.get("search_text")
         pagination_page = request.query_params.get("pagination_page", 1)
@@ -157,12 +164,12 @@ class SearchUsersByUsername(APIView):
 class SearchContacts(APIView):
     permission_classes = [ IsAuthenticated ]
 
-    def get(self, request):        
+    def get(self, request):
         text = request.query_params.get("search_text")
         if text is None:
             return Response({"param_missing": True}, status=400)
 
-        results = UserContact.objects.filter(user__id=request.user.id, contact__username__icontains=text) 
+        results = UserContact.objects.filter(user__id=request.user.id, contact__username__icontains=text)
         results = [contact.serialize()["contact"] for contact in results]
         return Response({"results": results}, status=200)
 

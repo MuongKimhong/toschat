@@ -5,8 +5,8 @@ import requests
 class ApiRequests:
     def __init__(self) -> None:
         # change url for local server url for Django
-        self.base_url = "https://apihandler.toschat.xyz"
-    
+        self.base_url = "http://localhost:8000"
+
     def headers(self, access_token: str) -> Dict[str, str]:
         return {"Authorization": f"Bearer {access_token}"}
 
@@ -14,7 +14,7 @@ class ApiRequests:
         return {"status_code": res.status_code, "data": res.json()}
 
     def sign_up_request(self, username: str, password: str, confirm_password: str):
-        url = f"{self.base_url}/api-account/sign-up/" 
+        url = f"{self.base_url}/api-account/sign-up/"
         data = {
             "username": username,
             "password": password,
@@ -26,7 +26,7 @@ class ApiRequests:
     def sign_in_request(self, username: str, password: str):
         url = f"{self.base_url}/api-account/sign-in/"
         data = {
-            "username": username, 
+            "username": username,
             "password": password
         }
         res = requests.post(url, data)
@@ -41,7 +41,7 @@ class ApiRequests:
         url = f"{self.base_url}/api-account/add-new-contact/"
         data = {
             "contact_username": contact_username
-        } 
+        }
         res = requests.post(url, data=data, headers=self.headers(access_token))
         return self.response(res)
 
@@ -73,7 +73,7 @@ class ApiRequests:
     def send_message_request(self, chatroom_id: int, text: str, access_token: str):
         url = f"{self.base_url}/api-chat/send-message/"
         data = {
-            "chatroom_id": chatroom_id, 
+            "chatroom_id": chatroom_id,
             "text": text
         }
         res = requests.post(url, data=data, headers=self.headers(access_token))

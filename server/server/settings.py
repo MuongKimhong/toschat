@@ -3,9 +3,9 @@ from datetime import timedelta
 
 import json
 
-
-with open("/etc/toschat_server_conf.json") as toschat_server_config:
-    toschat_config = json.load(toschat_server_config)
+# use this for production
+# with open("/etc/toschat_server_conf.json") as toschat_server_config:
+#     toschat_config = json.load(toschat_server_config)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,13 +16,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-n%+v0#qdth(w$1w=-_5672bvv%^+sd=%b=7!ue#g66yo*@-+&t'
-SECRET_KEY = toschat_config["secret_key"]
+SECRET_KEY = 'django-insecure-n%+v0#qdth(w$1w=-_5672bvv%^+sd=%b=7!ue#g66yo*@-+&t'
+# SECRET_KEY = toschat_config["secret_key"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = toschat_config["allow_hosts"]
+# ALLOWED_HOSTS = toschat_config["allow_hosts"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -34,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'rest_framework',
     'corsheaders',
     'account',
@@ -81,7 +82,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-CORS_ALLOW_ALL_ORIGINS: True
+CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -168,9 +169,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'account.User'
 
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": "127.0.0.1:11211",
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+#         "LOCATION": "127.0.0.1:11211",
+#     }
+# }

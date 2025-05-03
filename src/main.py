@@ -13,18 +13,19 @@ class Main(App):
         self.access_token: str | None = None
         self.current_chatroom_id: int | None = None
         self.current_chat_username: str | None = None
+        self.contacts: list[str] = []
         self.user: dict = dict()
 
         # handle user online status update (online or offline)
         self.websocket_online_status_namespace = None
         self.registered_atexit_handler = False
-        
+
         # change url for local server url for Socketio
-        self.websocket_url = "https://websocketconnection.toschat.xyz"
+        self.websocket_url = "http://localhost:3000"
         super().__init__()
 
     def logout(self) -> None:
-        self.handle_user_goes_offline_request()
+        ApiRequests().user_goes_offline_request(self.access_token)
         self.websocket_online_status_namespace.emit(
             "update-online-status",
             {"sender_name": self.app.user["username"], "status": "offline"},
@@ -37,47 +38,47 @@ class Main(App):
         self.user = None
         self.switch_screen(SignInScreen())
 
-    @work(exclusive=True, thread=True)
-    def handle_user_goes_offline_request(self) -> None:
-        if self.access_token is not None:
-            res = ApiRequests().user_goes_offline_request(self.access_token)
-
     def connect_websocket_online_status_namespace(self) -> None:
         self.websocket_online_status_namespace = socketio.Client()
         self.websocket_online_status_namespace.connect(
-            self.websocket_url, 
+            self.websocket_url,
             namespaces=['/onlineStatus']
         )
-        
+
         @self.websocket_online_status_namespace.on("online-status-update", namespace="/onlineStatus")
         def on_message(update_data: dict):
             self.listen_websocket_online_status_namespace(
                 update_data=update_data
             )
-    
+
     def listen_websocket_online_status_namespace(self, update_data: dict) -> None:
         self.post_message(
             ReceiveOnlineStatusUpdate(update_data)
         )
 
-    def on_receive_online_status_update(self, update_event: ReceiveOnlineStatusUpdate) -> None: 
+    def on_receive_online_status_update(self, update_event: ReceiveOnlineStatusUpdate) -> None:
         # current active screen
         if self.screen.screen_name == "ContactScreen":
             update_data = update_event.update_data
 
-            if update_data['sender_name'] != self.app.user.get("username"):
-                contact_username = self.query_one(f"#contact-{update_data['sender_name']}")
+            if update_data["sender_name"] == self.app.user.get("username"):
+                return None
 
-                if update_data["status"] == "online":
-                    contact_username.update(
-                        renderable=f"{update_data['sender_name']} (online)"
-                    )
-                    contact_username.styles.color = "greenyellow"
-                else:
-                    contact_username.update(
-                        renderable=update_data['sender_name']
-                    )
-                    contact_username.styles.color = "white"
+            if update_data["sender_name"] not in self.app.contacts:
+                return None
+
+            contact_username = self.query_one(f"#contact-{update_data['sender_name']}")
+
+            if update_data["status"] == "online":
+                contact_username.update(
+                    renderable=f"{update_data['sender_name']} (online)"
+                )
+                contact_username.styles.color = "greenyellow"
+            else:
+                contact_username.update(
+                    renderable=update_data['sender_name']
+                )
+                contact_username.styles.color = "white"
 
     def on_mount(self, event: events.Mount) -> None:
         self.push_screen(SignInScreen()) # default screen
