@@ -1,8 +1,8 @@
 ## Chat with your friends within your terminal (Linux & Mac)
 
-Sign In             |  Let Chat!
-:-------------------------:|:-------------------------:
-![Screenshot](new_screenshot_one.png)   |  ![Screenshot](new_screenshot_two.png)
+<p align="center">
+  <img src="toschat-demo.gif"></img>
+</p>
 
 ## Note
 on Linux, if you're using Ubuntu or Debain terminal will be resize automatically when app starts. 
