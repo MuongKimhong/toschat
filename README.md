@@ -4,26 +4,56 @@
   <img src="toschat-demo.gif"></img>
 </p>
 
-## Note
-on Linux, if you're using Ubuntu or Debain terminal will be resize automatically when app starts. 
-
-on MacOs, terminal will be resize automatically when app starts if you're using
-iTerm, iTerm2 or Terminal.
-
-For better experience change font size to 10 or 11
-
-## Installation
-```bash
-curl -sSL https://raw.githubusercontent.com/MuongKimhong/toschat/master/install.sh | bash
+### Run locally
+##### 1. Clone the repo
 ```
-### Usage
-use `toschat` command to open the application
-```bash
-toschat
+git clone https://github.com/MuongKimhong/toschat.git && cd toschat
+python3 -m venv .venv && source .venv/bin/activate
 ```
-to quit the application presse `Ctrl+c` or use icoo at left of the header
+##### 2. Install dependencies
+```
+pip3 install -r requirements.txt
+```
+##### 3. Start development servers (Django & Websocket)
+- Django
+```
+python3 server/manage.py makemigrations
+python3 server/manage.py migrate
+python3 server/manage.py runserver
+```
+- Websocket (another tab)
+```
+cd websocket
+npm install
+node index.js
+```
+##### 4. Run toschat app
+```
+textual run --dev src/main.py
+```
+
+<del>
+  ## Note
+  on Linux, if you're using Ubuntu or Debain terminal will be resize automatically when app starts. 
+  
+  on MacOs, terminal will be resize automatically when app starts if you're using
+  iTerm, iTerm2 or Terminal.
+  
+  For better experience change font size to 10 or 11
+  
+  ## Installation
+  ```bash
+  curl -sSL https://raw.githubusercontent.com/MuongKimhong/toschat/master/install.sh | bash
+  ```
+  ### Usage
+  use `toschat` command to open the application
+  ```bash
+  toschat
+  ```
+  to quit the application presse `Ctrl+c` or use icoo at left of the header
 
 All data are stored in live server!
+</del>
 
 ## Contribution
 
